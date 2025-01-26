@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "name": "Product A",
+    "description": "Description for Product A",
+    "price": 29.99,
+    "category": "Category 1",
+    "image": "https://picsum.photos/200/300"
+  },
+  {
+    "id": 2,
+    "name": "Product B",
+    "description": "Description for Product B",
+    "price": 49.99,
+    "category": "Category 2",
+    "image": "https://picsum.photos/200/300"
+  },
+  {
+    "id": 3,
+    "name": "Product C",
+    "description": "Description for Product C",
+    "price": 19.99,
+    "category": "Category 1",
+    "image": "https://picsum.photos/200/300"
+  },
+  {
+    "id": 4,
+    "name": "Product D",
+    "description": "Description for Product D",
+    "price": 39.99,
+    "category": "Category 3",
+    "image": "https://picsum.photos/200/300"
+  },
+  {
+    "id": 5,
+    "name": "Product E",
+    "description": "Description for Product E",
+    "price": 24.99,
+    "category": "Category 2",
+    "image": "https://picsum.photos/200/300"
+  },
+  {
+    "id": 6,
+    "name": "Product F",
+    "description": "Description for Product F",
+    "price": 59.99,
+    "category": "Category 4",
+    "image": "https://picsum.photos/200/300"
+  },
+  {
+    "id": 7,
+    "name": "Product G",
+    "description": "Description for Product G",
+    "price": 34.99,
+    "category": "Category 1",
+    "image": "https://picsum.photos/200/300"
+  },
+  {
+    "id": 8,
+    "name": "Product H",
+    "description": "Description for Product H",
+    "price": 44.99,
+    "category": "Category 3",
+    "image": "https://picsum.photos/200/300"
+  },
+  {
+    "id": 9,
+    "name": "Product I",
+    "description": "Description for Product I",
+    "price": 54.99,
+    "category": "Category 4",
+    "image": "https://picsum.photos/200/300"
+  },
+  {
+    "id": 10,
+    "name": "Product J",
+    "description": "Description for Product J",
+    "price": 64.99,
+    "category": "Category 5",
+    "image": "https://picsum.photos/200/300"
+  }
+]
