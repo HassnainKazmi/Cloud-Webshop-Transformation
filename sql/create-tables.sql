@@ -58,3 +58,13 @@ CREATE TABLE Payment (
     payment_status VARCHAR(50) DEFAULT 'Pending',
     payment_date DATETIME DEFAULT GETDATE()
 );
+
+-- 7- OrderItems:
+-- Links orders to the products being purchased.
+CREATE TABLE OrderItems (
+    order_item_id INT PRIMARY KEY,
+    order_id INT NOT NULL FOREIGN KEY REFERENCES Order(order_id),
+    product_id INT NOT NULL FOREIGN KEY REFERENCES Product(product_id),
+    quantity INT NOT NULL,
+    price DECIMAL(10, 2) NOT NULL
+);
