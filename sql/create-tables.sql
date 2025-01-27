@@ -49,3 +49,12 @@ CREATE TABLE Order (
     user_id INT NOT NULL FOREIGN KEY REFERENCES User(user_id),
     payment_id INT UNIQUE FOREIGN KEY REFERENCES Payment(payment_id)
 );
+
+-- 6- Payment:
+-- Tracks payment details (mock-up for integration with payment gateways).
+CREATE TABLE Payment (
+    payment_id INT PRIMARY KEY,
+    payment_method VARCHAR(50), -- e.g., 'PayPal', 'Credit Card'
+    payment_status VARCHAR(50) DEFAULT 'Pending',
+    payment_date DATETIME DEFAULT GETDATE()
+);
