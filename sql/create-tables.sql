@@ -37,3 +37,15 @@ CREATE TABLE Inventory (
     supplier VARCHAR(50),
     product_id INT NOT NULL FOREIGN KEY REFERENCES Product(product_id)
 );
+
+-- 5- Order:
+-- Stores high-level information about user orders.
+CREATE TABLE Order (
+    order_id INT PRIMARY KEY,
+    order_date DATETIME DEFAULT GETDATE(),
+    total_price DECIMAL(10, 2) NOT NULL,
+    item_count INT NOT NULL,
+    status VARCHAR(50) DEFAULT 'Pending',
+    user_id INT NOT NULL FOREIGN KEY REFERENCES User(user_id),
+    payment_id INT UNIQUE FOREIGN KEY REFERENCES Payment(payment_id)
+);
