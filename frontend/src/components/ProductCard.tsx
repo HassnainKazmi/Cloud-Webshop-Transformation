@@ -31,7 +31,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
       <div className="w-full h-40 rounded-t-lg bg-gray-100 flex items-center justify-center relative">
         {isLoading && (
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-8 h-8 rounded-full border-4 border-gray-300 border-t-blue-600 animate-spin"></div>{" "}
+            <div className="w-8 h-8 rounded-full border-4 border-gray-300 border-t-blue-600 animate-spin"></div>
           </div>
         )}
         {hasError ? (
