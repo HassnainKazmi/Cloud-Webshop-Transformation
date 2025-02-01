@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface ProductCardProps {
   id: number;
@@ -9,6 +10,7 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({
+  id,
   name,
   description,
   price,
@@ -17,10 +19,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
-  const handleImageLoad = () => {
-    setIsLoading(false);
-  };
+  const navigate = useNavigate();
 
+  const handleImageLoad = () => setIsLoading(false);
   const handleImageError = () => {
     setIsLoading(false);
     setHasError(true);
@@ -55,7 +56,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
         <p className="text-lg font-semibold text-gray-900 mt-3">
           ${price.toFixed(2)}
         </p>
-        <button className="mt-4 px-4 py-2 bg-blue-800 text-white rounded-lg hover:bg-blue-900 transition duration-300">
+        <button
+          className="mt-4 px-4 py-2 bg-blue-800 text-white rounded-lg hover:bg-blue-900 transition duration-300"
+          onClick={() => navigate(`/product/${id}`)}
+        >
           View Details
         </button>
       </div>

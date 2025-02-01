@@ -1,18 +1,16 @@
-import { useState, useEffect } from "react";
-import { Range, getTrackBackground } from "react-range";
+import React, { useState, useEffect } from "react";
 import products from "../data/products.json";
 import ProductCard from "../components/ProductCard";
+import FilterSidebar from "../components/FilterSidebar";
 
 const ProductCatalog: React.FC = () => {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const [priceRange, setPriceRange] = useState<[number, number] | null>(null);
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-  // Get unique categories from the product data
   const categories = [...new Set(products.map((product) => product.category))];
 
-  // Ensure we have products before calculating min/max prices
   const minPrice = products.length
     ? Math.min(...products.map((p) => p.price))
     : 0;
@@ -32,165 +30,106 @@ const ProductCatalog: React.FC = () => {
     );
   };
 
-  // Filter products based on search, categories, and price range
   const filteredProducts = products.filter((product) => {
     const matchesSearch =
       product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       product.description.toLowerCase().includes(searchQuery.toLowerCase());
-
     const matchesCategory =
       selectedCategories.length === 0 ||
       selectedCategories.includes(product.category);
-
     const matchesPrice =
       priceRange &&
       product.price >= priceRange[0] &&
       product.price <= priceRange[1];
-
     return matchesSearch && matchesCategory && matchesPrice;
   });
 
   return (
-    <>
-      <h1 className="text-2xl font-bold mb-4 p-4 text-center">
-        Product Catalog
-      </h1>
+    <div className="container mx-auto px-4 py-6">
+      {/* Page Title */}
+      <h1 className="text-2xl font-bold mb-4 text-center">Product Catalog</h1>
 
-      <div className="product-catalog py-5 px-2 flex flex-col md:flex-row">
-        {/* Sidebar for Filters */}
-        <div
-          className={`w-full md:w-1/5 p-2 ${
-            isFilterOpen ? "block" : "hidden md:block"
-          } sticky top-0`}
+      {!isFilterOpen && (
+        <button
+          className="md:hidden bg-blue-600 text-white px-4 py-2 rounded-lg mb-4"
+          onClick={() => setIsFilterOpen(true)}
         >
-          <h2 className="text-lg font-bold mb-4 flex justify-between items-center">
-            Filters
-            <button
-              className="md:hidden text-sm text-blue-500 underline"
-              onClick={() => setIsFilterOpen(false)}
-            >
-              Close
-            </button>
-          </h2>
+          Open Filters
+        </button>
+      )}
 
-          {/* Search Bar */}
-          <div className="mb-4">
-            <input
-              type="text"
-              placeholder="Search products..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-lg"
+      {/* Main Layout */}
+      <div className="flex flex-col md:flex-row gap-8">
+        {/* Filter Sidebar */}
+        <div
+          className={`transition-all duration-300 ease-in-out ${
+            isFilterOpen ? "block" : "hidden md:block"
+          } md:w-1/4 w-full`}
+        >
+          <div className="p-4 bg-gray-100 rounded-lg shadow">
+            {isFilterOpen && (
+              <button
+                className="md:hidden text-blue-500 underline mb-4"
+                onClick={() => setIsFilterOpen(false)}
+              >
+                Close Filters
+              </button>
+            )}
+            <FilterSidebar
+              categories={categories}
+              selectedCategories={selectedCategories}
+              handleCategoryChange={handleCategoryChange}
+              priceRange={priceRange as [number, number]}
+              minPrice={minPrice}
+              maxPrice={maxPrice}
+              setPriceRange={setPriceRange}
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
             />
           </div>
-
-          {/* Category Filter */}
-          <div className="mb-4">
-            <h3 className="text-md font-semibold mb-2">Categories</h3>
-            <div className="flex flex-col space-y-2">
-              {categories.map((category) => (
-                <label key={category} className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    value={category}
-                    checked={selectedCategories.includes(category)}
-                    onChange={() => handleCategoryChange(category)}
-                    className="w-4 h-4"
-                  />
-                  <span>{category}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-
-          {/* Price Range Slider */}
-          {priceRange && (
-            <div className="mr-1">
-              <h3 className="text-md font-semibold mb-2">Price Range</h3>
-              <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
-                <span>${priceRange[0].toFixed(2)}</span>
-                <span>${priceRange[1].toFixed(2)}</span>
-              </div>
-              <Range
-                step={1}
-                min={minPrice}
-                max={maxPrice}
-                values={priceRange}
-                onChange={(values: number[]) =>
-                  setPriceRange([values[0], values[1]])
-                }
-                renderTrack={({ props, children }) => {
-                  return (
-                    <div
-                      {...props}
-                      style={{
-                        height: "6px",
-                        width: "100%",
-                        background: getTrackBackground({
-                          values: priceRange,
-                          colors: ["#d3d3d3", "#007bff", "#d3d3d3"],
-                          min: minPrice,
-                          max: maxPrice,
-                        }),
-                        borderRadius: "4px",
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      {children}
-                    </div>
-                  );
-                }}
-                renderThumb={({ props }) => (
-                  <div {...props}>
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: "-7px",
-                        left: "-4px",
-                        fontWeight: "bold",
-                        fontSize: "12px",
-                        background: "#000",
-                        padding: "6px",
-                        borderRadius: "4px",
-                      }}
-                    ></div>
-                  </div>
-                )}
-              />
-            </div>
-          )}
         </div>
 
         {/* Product Grid */}
-        <div className="w-full mx-2 md:w-4/5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="w-full md:w-3/4">
           {filteredProducts.length > 0 ? (
-            filteredProducts.map((product) => (
-              <ProductCard
-                key={product.id}
-                id={product.id}
-                name={product.name}
-                description={product.description}
-                price={product.price}
-                image={product.image}
-              />
-            ))
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredProducts.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  id={product.id}
+                  name={product.name}
+                  description={product.description}
+                  price={product.price}
+                  image={product.image}
+                />
+              ))}
+            </div>
           ) : (
-            <p>No products found for the selected filters.</p>
+            <div className="flex items-center justify-center h-[60vh]">
+              <div className="text-center">
+                <h2 className="text-lg font-semibold text-gray-700 mb-2">
+                  No Products Found
+                </h2>
+                <p className="text-gray-500 mb-6">
+                  Try adjusting your filters or search criteria to find the
+                  perfect product.
+                </p>
+                <button
+                  onClick={() => {
+                    setSearchQuery("");
+                    setSelectedCategories([]);
+                    setPriceRange([minPrice, maxPrice]);
+                  }}
+                  className="px-6 py-3 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition"
+                >
+                  Reset Filters
+                </button>
+              </div>
+            </div>
           )}
         </div>
-
-        {/* Toggle Filter Button for Small Screens */}
-        {!isFilterOpen && (
-          <button
-            className="md:hidden bg-blue-600 text-white px-4 py-2 rounded-lg mb-4"
-            onClick={() => setIsFilterOpen(true)}
-          >
-            Open Filters
-          </button>
-        )}
       </div>
-    </>
+    </div>
   );
 };
 
