@@ -62,9 +62,23 @@ const ProductCard: React.FC<ProductCardProps> = ({
         >
           View Details
         </button>
+        <button
+          className="mt-4 mx-2 px-4 py-2 bg-blue-800 text-white rounded-lg hover:bg-blue-900 transition duration-300"
+          // onClick={() => navigate(/product/${id})}
+        >
+          Add to Cart
+        </button>
+        <button
+          className="mt-4 px-4 py-2 bg-blue-800 text-white rounded-lg hover:bg-blue-900 transition duration-300"
+          // onClick={() => navigate(/product/${id})}
+        >
+          Buy now
+        </button>
       </div>
     </div>
   );
 };
 
 export default ProductCard;
+
+
