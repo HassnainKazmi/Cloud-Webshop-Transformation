@@ -1,13 +1,11 @@
-from flask_restful import Resource, marshal_with, reqparse, abort
+from flask_restful import Resource, marshal_with, abort
 
 import database
 from models.models import Product, Category
-from utils.fields import product_fields
 
-product_args = reqparse.RequestParser()
-product_args.add_argument('name', type=str, required=True, help='Name is required')
-product_args.add_argument('quantity', type=int, required=True, help='Quantity is required')
-product_args.add_argument('category_id', type=int, required=False)
+from utils.fields import product_fields
+from utils.product_request_arguments import post_product_args, patch_product_args
+
 
 class Products(Resource):
     @marshal_with(product_fields)
@@ -16,10 +14,11 @@ class Products(Resource):
 
     @marshal_with(product_fields)
     def post(self):
-        args = product_args.parse_args()
+        args = post_product_args.parse_args()
         category = Category().query.filter_by(id=args['category_id']).first()
         new_product = Product(name=args['name'], quantity=args['quantity'], category=category)
         database.db.session.add(new_product)
+        database.db.session.commit()
         return self._get_products_list(), 201
 
     def _get_products_list(self):
@@ -35,16 +34,16 @@ class Products(Resource):
 class ProductOperations(Resource):
     @marshal_with(product_fields)
     def patch(self, id):
-        args = product_args.parse_args()
-        if args.get('category_id') is not None:
-            abort(400, message=f'category id update is not allowed!')
+        args = patch_product_args.parse_args(strict=True)
         product_to_update = Product.query.filter_by(id=id).first()
         if not product_to_update:
             abort(404, message='Product not found!')
         product_to_update.name = args['name']
         product_to_update.quantity = args['quantity']
         database.db.session.commit()
-        return product_to_update
+        product_to_update_dict = product_to_update.__dict__
+        product_to_update_dict['category_name'] = product_to_update.category.name
+        return product_to_update_dict
 
     @marshal_with(product_fields)
     def delete(self, id):
