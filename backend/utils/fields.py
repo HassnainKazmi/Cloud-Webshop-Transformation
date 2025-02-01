@@ -5,3 +5,8 @@ product_fields = {
     'name': fields.String,
     'quantity': fields.Integer
 }
+
+category_fields = {
+    'id': fields.Integer,
+    'name': fields.String
+}

@@ -5,8 +5,12 @@ app = Flask(__name__)
 api = Api(app)
 
 import controller.Products
+import controller.Category
+
 api.add_resource(controller.Products.Products, '/api/products/', endpoint='products')
 api.add_resource(controller.Products.ProductOperations, '/api/product/<int:id>')
+
+api.add_resource(controller.Category.Categories, '/api/categories/', endpoint='categories')
 
 @app.route('/')
 def test_endpoint():
