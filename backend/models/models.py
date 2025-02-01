@@ -25,7 +25,7 @@ class Category(database.db.Model):
 class Product(database.db.Model):
     __tablename__ = 'product'
     id = database.db.Column(database.db.Integer, primary_key=True)
-    name = database.db.Column(database.db.String(80), unique=True, nullable=False)
+    name = database.db.Column(database.db.String(80), unique=False, nullable=False)
     quantity = database.db.Column(database.db.Integer)
     category_id = database.db.Column(database.db.Integer, database.db.ForeignKey('category.id'), nullable=False)
 

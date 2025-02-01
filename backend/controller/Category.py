@@ -7,3 +7,6 @@ class Categories(Resource):
     def get(self):
         categories = Category.query.all()
         return categories
+
+    def post(self):
+        pass
