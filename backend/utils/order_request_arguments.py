@@ -4,5 +4,9 @@ from flask_restful import reqparse, inputs
 post_order_arguments = reqparse.RequestParser()
 post_order_arguments.add_argument("user_id", type=int, required=True)
 post_order_arguments.add_argument(
-    "product_ids", type=int, action="append", location="json"
-)  # for a comma separated list
+    "products",
+    type=list,
+    location="json",
+    required=True,
+    help="Products field is required and must be a list.",
+)
