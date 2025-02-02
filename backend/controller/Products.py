@@ -1,10 +1,11 @@
 from flask_restful import Resource, marshal_with, abort
 
 import database
-from models.models import Product, Category
+from models.models import Product, Category, Inventory
 
 from utils.fields import product_fields
 from utils.product_request_arguments import post_product_args, patch_product_args
+from utils.utils import calculate_stock_level
 
 
 class Products(Resource):
@@ -18,11 +19,18 @@ class Products(Resource):
         category = Category().query.filter_by(id=args["category_id"]).first()
         new_product = Product(
             name=args["name"],
-            quantity=args["quantity"],
             price=args["price"],
             category=category,
         )
         database.db.session.add(new_product)
+        database.db.session.commit()
+        # add the product to inventory along with its quantity
+        inventory_item = Inventory(
+            product_id=new_product.id,
+            stock_quantity=args["quantity"],
+            stock_level=calculate_stock_level(args["quantity"]),
+        )
+        database.db.session.add(inventory_item)
         database.db.session.commit()
         return self._get_products_list(), 201
 

@@ -1,20 +1,6 @@
-from datetime import datetime
 from sqlalchemy.sql import func
-import enum
 import database
-
-
-class StockLevel(enum.Enum):
-    LOW = "LOW"
-    MEDIUM = "MEDIUM"
-    HIGH = "HIGH"
-    OUT_OF_STOCK = "OUT OF STOCK"
-
-
-class OrderStatus(enum.Enum):
-    IN_PROCESS = "IN_PROCESS"  # When order is awaiting approval
-    CONFIRMED = "CONFIRMED"  # When order is confirmed
-    DELIVERED = "DELIVERED"  # When order is complete
+from utils.enums import StockLevel, OrderStatus
 
 
 class User(database.db.Model):
@@ -38,12 +24,12 @@ class Product(database.db.Model):
     __tablename__ = "product"
     id = database.db.Column(database.db.Integer, primary_key=True)
     name = database.db.Column(database.db.String(80), unique=False, nullable=False)
-    quantity = database.db.Column(database.db.Integer)
     price = database.db.Column(database.db.Float, nullable=False)
     category_id = database.db.Column(
         database.db.Integer, database.db.ForeignKey("category.id"), nullable=False
     )
     order_item = database.db.relationship("OrderItem", backref="product_info")
+    inventory = database.db.relationship("Inventory", backref="product")
 
     def __repr__(self):
         return f"id: {self.id}\tName: {self.name}"
@@ -53,7 +39,10 @@ class Inventory(database.db.Model):
     __tablename__ = "inventory"
     id = database.db.Column(database.db.Integer, primary_key=True)
     product_id = database.db.Column(
-        database.db.Integer, database.db.ForeignKey("product.id"), nullable=False
+        database.db.Integer,
+        database.db.ForeignKey("product.id"),
+        nullable=False,
+        unique=True,
     )
     stock_quantity = database.db.Column(database.db.Integer, nullable=False)
     stock_level = database.db.Column(database.db.Enum(StockLevel), nullable=False)
