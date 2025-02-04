@@ -5,7 +5,7 @@ from models.models import Order as OrderModel, User, Product, OrderItem, Invento
 
 from utils.fields import order_fields
 from utils.order_request_arguments import post_order_arguments, patch_order_arguments
-from utils.utils import calculate_stock_level
+from utils.utils import calculate_stock_level, send_mail
 from utils.enums import OrderStatus
 
 
@@ -33,9 +33,15 @@ class Order(Resource):
         #     abort(400, message='')
         order.status = new_status
         database.db.session.commit()
+        if order.status == OrderStatus.DELIVERED:
+            if send_mail(
+                subject="Order Delivered",
+                message="Your order has been delivered",
+                recipients=["cloudproj@yopmail.com"],
+            ):
+                print("email sent!")
         order_dict = order.__dict__
         order_dict["products"] = [o.product_info for o in order.order_items]
-        print(order_dict)
         return order_dict, 200
 
 
