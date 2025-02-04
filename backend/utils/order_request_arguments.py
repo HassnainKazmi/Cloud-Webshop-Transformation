@@ -10,3 +10,7 @@ post_order_arguments.add_argument(
     required=True,
     help="Products field is required and must be a list.",
 )
+
+# PATCH order arguments
+patch_order_arguments = reqparse.RequestParser()
+patch_order_arguments.add_argument("status", type=str, required=True)

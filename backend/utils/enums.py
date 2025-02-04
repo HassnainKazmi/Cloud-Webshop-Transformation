@@ -12,3 +12,7 @@ class OrderStatus(enum.Enum):
     IN_PROCESS = "IN_PROCESS"  # When order is awaiting approval
     CONFIRMED = "CONFIRMED"  # When order is confirmed
     DELIVERED = "DELIVERED"  # When order is complete
+
+    @classmethod
+    def list(cls):
+        return list(map(lambda c: c.value, cls))

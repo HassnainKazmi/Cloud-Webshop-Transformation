@@ -10,9 +10,16 @@ product_fields = {
 
 category_fields = {"id": fields.Integer, "name": fields.String}
 
+nested_order_fields = {
+    "id": fields.Integer,
+    "name": fields.String,
+    "price": fields.Float,
+}
+
 order_fields = {
     "id": fields.Integer,
     "order_date": fields.DateTime,
     "total_price": fields.Float,
     "status": fields.String,
+    "products": fields.Nested(nested=nested_order_fields),
 }
