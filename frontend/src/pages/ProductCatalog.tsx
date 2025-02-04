@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import products from "../data/products.json";
 import ProductCard from "../components/ProductCard";
 import FilterSidebar from "../components/FilterSidebar";
+import { useCart } from "../context/CartContext";
+import Navbar from "../components/Navbar"; // Ensure cart icon is present
 
 const ProductCatalog: React.FC = () => {
+  // const { state } = useCart(); // Access cart state
+  // const navigate = useNavigate();
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -11,12 +16,8 @@ const ProductCatalog: React.FC = () => {
 
   const categories = [...new Set(products.map((product) => product.category))];
 
-  const minPrice = products.length
-    ? Math.min(...products.map((p) => p.price))
-    : 0;
-  const maxPrice = products.length
-    ? Math.max(...products.map((p) => p.price))
-    : 100;
+  const minPrice = products.length ? Math.min(...products.map((p) => p.price)) : 0;
+  const maxPrice = products.length ? Math.max(...products.map((p) => p.price)) : 100;
 
   useEffect(() => {
     setPriceRange([minPrice, maxPrice]);
@@ -24,9 +25,7 @@ const ProductCatalog: React.FC = () => {
 
   const handleCategoryChange = (category: string) => {
     setSelectedCategories((prev) =>
-      prev.includes(category)
-        ? prev.filter((cat) => cat !== category)
-        : [...prev, category]
+      prev.includes(category) ? prev.filter((cat) => cat !== category) : [...prev, category]
     );
   };
 
@@ -34,20 +33,18 @@ const ProductCatalog: React.FC = () => {
     const matchesSearch =
       product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       product.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory =
-      selectedCategories.length === 0 ||
-      selectedCategories.includes(product.category);
-    const matchesPrice =
-      priceRange &&
-      product.price >= priceRange[0] &&
-      product.price <= priceRange[1];
+    const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(product.category);
+    const matchesPrice = priceRange && product.price >= priceRange[0] && product.price <= priceRange[1];
     return matchesSearch && matchesCategory && matchesPrice;
   });
 
   return (
-    <div className="container mx-auto px-4 py-6">
-      {/* Page Title */}
-      <h1 className="text-2xl font-bold mb-4 text-center">Product Catalog</h1>
+    <div className="container mx-auto my-10 px-4 py-6">
+      {/* Navbar with Cart Icon */}
+      <Navbar />
+
+      {/* Header Section */}
+      <h1 className="text-2xl font-bold text-center my-6">Product Catalog</h1>
 
       {!isFilterOpen && (
         <button
@@ -66,27 +63,17 @@ const ProductCatalog: React.FC = () => {
             isFilterOpen ? "block" : "hidden md:block"
           } md:w-1/4 w-full`}
         >
-          <div className="p-4 bg-gray-100 rounded-lg shadow">
-            {isFilterOpen && (
-              <button
-                className="md:hidden text-blue-500 underline mb-4"
-                onClick={() => setIsFilterOpen(false)}
-              >
-                Close Filters
-              </button>
-            )}
-            <FilterSidebar
-              categories={categories}
-              selectedCategories={selectedCategories}
-              handleCategoryChange={handleCategoryChange}
-              priceRange={priceRange as [number, number]}
-              minPrice={minPrice}
-              maxPrice={maxPrice}
-              setPriceRange={setPriceRange}
-              searchQuery={searchQuery}
-              setSearchQuery={setSearchQuery}
-            />
-          </div>
+          <FilterSidebar
+            categories={categories}
+            selectedCategories={selectedCategories}
+            handleCategoryChange={handleCategoryChange}
+            priceRange={priceRange as [number, number]}
+            minPrice={minPrice}
+            maxPrice={maxPrice}
+            setPriceRange={setPriceRange}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+          />
         </div>
 
         {/* Product Grid */}
@@ -94,25 +81,20 @@ const ProductCatalog: React.FC = () => {
           {filteredProducts.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredProducts.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  id={product.id}
-                  name={product.name}
-                  description={product.description}
-                  price={product.price}
-                  image={product.image}
-                />
+                <ProductCard key={product.id} {...product} />
               ))}
             </div>
           ) : (
             <div className="flex items-center justify-center h-[60vh]">
               <div className="text-center">
-                <h2 className="text-lg font-semibold text-gray-700 mb-2">
-                  No Products Found
-                </h2>
+                <img
+                  src="https://cdn-icons-png.flaticon.com/512/2748/2748558.png"
+                  alt="No products found"
+                  className="w-32 h-32 mx-auto mb-6 opacity-70"
+                />
+                <h2 className="text-lg font-semibold text-gray-700 mb-2">No Products Found</h2>
                 <p className="text-gray-500 mb-6">
-                  Try adjusting your filters or search criteria to find the
-                  perfect product.
+                  Try adjusting your filters or search criteria to find the perfect product.
                 </p>
                 <button
                   onClick={() => {
