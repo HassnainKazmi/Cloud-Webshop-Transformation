@@ -31,13 +31,14 @@ class Order(Resource):
             abort(400, message="Passed value of new status not allowed!")
         # if order.status != OrderStatus.IN_PROCESS:
         #     abort(400, message='')
+        user_info = order.user_info
         order.status = new_status
         database.db.session.commit()
         if order.status == OrderStatus.DELIVERED:
             if send_mail(
                 subject="Order Delivered",
                 message="Your order has been delivered",
-                recipients=["cloudproj@yopmail.com"],
+                recipients=[user_info.email],
             ):
                 print("email sent!")
         order_dict = order.__dict__
