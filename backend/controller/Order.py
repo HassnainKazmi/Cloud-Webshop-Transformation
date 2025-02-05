@@ -72,6 +72,18 @@ class OrderOperations(Resource):
         products = Product.query.filter(Product.id.in_(product_ids)).all()
         if len(order_products) != len(products):
             abort(404, message="One or more products not found, due to bad ids")
+        products_dict = {
+            product.id: product.inventory.stock_quantity for product in products
+        }
+        for order_product_info in order_products:
+            required_product_id = order_product_info.get("product_id")
+            required_product_quantity = order_product_info.get("quantity")
+            available_quantity = products_dict.get(required_product_id, 0)
+            if available_quantity < required_product_quantity:
+                abort(
+                    400,
+                    message=f"Product with id {required_product_id} does not have sufficient quantity",
+                )
         order = OrderModel(
             total_price=sum(int(product.price) for product in products),
             items_count=len(order_products),

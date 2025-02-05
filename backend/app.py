@@ -23,16 +23,14 @@ import controller.Category
 import controller.Order
 
 # Products endpoints
-api.add_resource(controller.Products.Products, "/api/products/", endpoint="products")
+api.add_resource(controller.Products.Products, "/api/products/")
 api.add_resource(controller.Products.ProductOperations, "/api/product/<int:id>")
 
 # Categories endpoints
-api.add_resource(
-    controller.Category.Categories, "/api/categories/", endpoint="categories"
-)
+api.add_resource(controller.Category.Categories, "/api/categories/")
 
 # Order endpoints
-api.add_resource(controller.Order.Order, "/api/orders/<int:id>", endpoint="order")
+api.add_resource(controller.Order.Order, "/api/orders/<int:id>")
 api.add_resource(controller.Order.OrderOperations, "/api/order/")
 
 
