@@ -9,7 +9,8 @@ class User(database.db.Model):
     first_name = database.db.Column(database.db.String(30), nullable=False)
     last_name = database.db.Column(database.db.String(30), nullable=False)
     email = database.db.Column(database.db.String(70), nullable=False)
-    address = database.db.Column(database.db.String(200), nullable=False)
+    address = database.db.Column(database.db.String(200), nullable=True)
+    is_admin = database.db.Column(database.db.Boolean, default=False)
     orders = database.db.relationship("Order", backref="user_info")
 
 
