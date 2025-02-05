@@ -115,14 +115,14 @@ class OrderOperations(Resource):
             inventory_item.stock_level = calculate_stock_level(
                 inventory_item.stock_quantity
             )
-            # if inventory_item.stock_quantity < 10:
-            #     admin_user = User.query.filter(User.is_admin == True).first()
-            #     if send_mail(
-            #         subject='Order Delivered',
-            #         message=f'The product with id {inventory_item.product_id} is low in stock!',
-            #         recipients=[admin_user.email],
-            #     ):
-            #         print("email sent!")
+            if inventory_item.stock_quantity < 10:
+                admin_user = User.query.filter(User.is_admin == True).first()
+                if send_mail(
+                    subject="Order Delivered",
+                    message=f"The product with id {inventory_item.product_id} is low in stock!",
+                    recipients=[admin_user.email],
+                ):
+                    print("email sent!")
             updated_inventory_data.append(inventory_item.__dict__)
         database.db.session.bulk_update_mappings(Inventory, updated_inventory_data)
         database.db.session.commit()
