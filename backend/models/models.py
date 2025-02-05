@@ -29,7 +29,7 @@ class Product(database.db.Model):
         database.db.Integer, database.db.ForeignKey("category.id"), nullable=False
     )
     order_item = database.db.relationship("OrderItem", backref="product_info")
-    inventory = database.db.relationship("Inventory", backref="product")
+    inventory = database.db.relationship("Inventory", backref="product", uselist=False)
 
     def __repr__(self):
         return f"id: {self.id}\tName: {self.name}"
