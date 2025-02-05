@@ -23,3 +23,10 @@ order_fields = {
     "status": fields.String,
     "products": fields.Nested(nested=nested_order_fields),
 }
+
+user_fields = {
+    "first_name": fields.String,
+    "last_name": fields.String,
+    "email": fields.String,
+    "address": fields.String,
+}
