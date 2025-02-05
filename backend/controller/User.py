@@ -5,10 +5,12 @@ import database
 from models.models import User as UserModel
 
 from utils.user_request_arguments import post_user_arguments
+from utils.fields import user_fields
 from utils.utils import is_it_true
 
 
 class User(Resource):
+    @marshal_with(user_fields)
     def post(self):
         """Creates an user (admin or simple depending on the flag passes)"""
         args = post_user_arguments.parse_args(strict=True)
@@ -29,5 +31,6 @@ class User(Resource):
         )
         database.db.session.add(user)
         database.db.session.commit()
+        database.db.session.refresh(user)
 
-        return "User created", 201
+        return user.__dict__, 201
