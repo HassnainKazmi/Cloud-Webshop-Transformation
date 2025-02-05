@@ -26,3 +26,7 @@ def send_mail(subject: str, message: str, recipients: list[str]):
     except Exception as e:
         print(e)
         raise e
+
+
+def is_it_true(value: str):
+    return value.lower() == "true"

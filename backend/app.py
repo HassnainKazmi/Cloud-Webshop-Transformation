@@ -21,6 +21,7 @@ mail = Mail(app)
 import controller.Products
 import controller.Category
 import controller.Order
+import controller.User
 
 # Products endpoints
 api.add_resource(controller.Products.Products, "/api/products/")
@@ -32,6 +33,9 @@ api.add_resource(controller.Category.Categories, "/api/categories/")
 # Order endpoints
 api.add_resource(controller.Order.Order, "/api/orders/<int:id>")
 api.add_resource(controller.Order.OrderOperations, "/api/order/")
+
+# User endpoints
+api.add_resource(controller.User.User, "/api/user/")
 
 
 @app.route("/")
