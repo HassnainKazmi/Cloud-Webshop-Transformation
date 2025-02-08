@@ -30,3 +30,12 @@ user_fields = {
     "email": fields.String,
     "address": fields.String,
 }
+
+payment_fields = {
+    'id': fields.Integer,
+    'user_id': fields.Integer,
+    'order_id': fields.Integer,
+    'amount': fields.Float,
+    'status': fields.String,
+    'payment_date': fields.DateTime
+}
