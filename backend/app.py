@@ -22,6 +22,7 @@ import controller.Products
 import controller.Category
 import controller.Order
 import controller.User
+import controller.Payment
 
 # Products endpoints
 api.add_resource(controller.Products.Products, "/api/products/")
@@ -36,6 +37,9 @@ api.add_resource(controller.Order.OrderOperations, "/api/order/")
 
 # User endpoints
 api.add_resource(controller.User.User, "/api/user/")
+
+# Payment endpoints
+api.add_resource(controller.Payment.Payment, '/payment', '/payment/<int:payment_id>')
 
 
 @app.route("/")

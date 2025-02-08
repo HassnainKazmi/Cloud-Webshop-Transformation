@@ -64,7 +64,6 @@ class Order(database.db.Model):
         database.db.Integer, database.db.ForeignKey("user.id"), nullable=False
     )
     order_items = database.db.relationship("OrderItem", backref="order_info")
-    # payment_id pending when integration payment flow
 
 
 class OrderItem(database.db.Model):
@@ -76,3 +75,13 @@ class OrderItem(database.db.Model):
     product_id = database.db.Column(
         database.db.Integer, database.db.ForeignKey("product.id"), nullable=False
     )
+
+class Payment(database.db.Model):
+    __tablename__ = 'payment'
+    id = database.db.Column(database.db.Integer, primary_key=True)
+    user_id = database.db.Column(database.db.Integer, database.db.ForeignKey('user.id'), nullable=False)
+    order_id = database.db.Column(database.db.Integer, database.db.ForeignKey('order.id'), nullable=False)
+    amount = database.db.Column(database.db.Float, nullable=False)
+    status = database.db.Column(database.db.Enum('PENDING', 'COMPLETED', 'FAILED'), nullable=False, default='PENDING')
+    payment_date = database.db.Column(database.db.DateTime, nullable=False, default=func.now())
+
