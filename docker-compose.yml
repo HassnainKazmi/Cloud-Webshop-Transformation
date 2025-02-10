@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  mysql-db:
+    image: mysql:8
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: webshop
+    ports:
+      - "3306:3306"
+    networks:
+      - app-network
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+
+  webshop-backend:
+    image: webshop.azurecr.io/webshop-backend:4.0
+    container_name: webshop-backend
+    environment:
+      DB_USER: root
+      DB_PASSWORD: admin
+      DB_HOST: mysql-db
+      DB_NAME: webshop
+    ports:
+      - "80:80"
+    networks:
+      - app-network
+    depends_on:
+      - mysql-db
+
+networks:
+  app-network:
+
+volumes:
+  mysql-data:
+    driver: local
