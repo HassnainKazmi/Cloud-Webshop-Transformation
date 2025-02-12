@@ -3,8 +3,6 @@ set -e
 
 echo "Database ready"
 
-flask db stamp
-flask db migrate
 flask db upgrade
 
 echo "Migrations completed!"
