@@ -4,7 +4,12 @@ from flask_restful import Api
 from flask_mail import Mail
 from dotenv import load_dotenv
 
-load_dotenv()
+app_env = os.getenv("APP_ENV", "development")
+
+if app_env == "development":
+    load_dotenv(".env.dev")
+else:
+    load_dotenv()
 
 app = Flask(__name__)
 api = Api(app)
@@ -19,7 +24,7 @@ app.config["MAIL_USE_SSL"] = True
 mail = Mail(app)
 
 import controller.Products
-import controller.Category
+import controller.Category  # noqa: E402
 import controller.Order
 import controller.User
 

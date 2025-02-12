@@ -16,3 +16,4 @@ EXPOSE 80
 
 # Command to run the Flask app when the container starts
 CMD ["flask", "--app", "app.py", "run", "-h", "0.0.0.0", "-p", "80"]
+# ENTRYPOINT [ "executable" ]
