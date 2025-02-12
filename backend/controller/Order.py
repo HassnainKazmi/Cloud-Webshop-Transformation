@@ -29,8 +29,11 @@ class Order(Resource):
         new_status = args["status"]
         if new_status not in allowed_status:
             abort(400, message="Passed value of new status not allowed!")
-        # if order.status != OrderStatus.IN_PROCESS:
-        #     abort(400, message='')
+        if order.status == OrderStatus.DELIVERED:
+            abort(
+                400,
+                message="Can not update the status of order that has been completed!",
+            )
         user_info = order.user_info
         order.status = new_status
         database.db.session.commit()
@@ -40,7 +43,14 @@ class Order(Resource):
                 message="Your order has been confirmed",
                 recipients=[user_info.email],
             ):
-                print("email sent!")
+                print("Order confirmation email sent.")
+        if order.status == OrderStatus.DELIVERED:
+            if send_mail(
+                subject="Order Delivered",
+                message="Your order has been delivered",
+                recipients=[user_info.email],
+            ):
+                print("Order delivery email sent.")
         order_dict = order.__dict__
         order_dict["products"] = [o.product_info for o in order.order_items]
         return order_dict, 200
