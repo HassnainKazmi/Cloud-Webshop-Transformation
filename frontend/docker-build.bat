@@ -1,0 +1,1 @@
+docker build -t webshop.azurecr.io/webshop-frontend:1.0 .
