@@ -9,8 +9,6 @@ services:
       - "3306:3306"
     networks:
       - app-network
-    volumes:
-      - webshop-db-data:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
@@ -19,16 +17,19 @@ services:
       timeout: 10s
 
   webshop-backend:
-    image: webshop.azurecr.io/webshop-backend:1.0
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: webshop.azurecr.io/webshop-backend:0.0
     container_name: webshop-backend
     environment:
-      APP_ENV: production
+      APP_ENV: development
       DB_USER: root
       DB_PASSWORD: admin
       DB_HOST: webshop-db
       DB_NAME: webshop
     ports:
-      - "80:80"
+      - "5000:80"
     networks:
       - app-network
     depends_on:
@@ -37,7 +38,3 @@ services:
 
 networks:
   app-network:
-
-volumes:
-  webshop-db-data:
-    driver: local
