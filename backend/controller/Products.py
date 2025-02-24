@@ -1,4 +1,5 @@
 from flask_restful import Resource, marshal_with, abort
+from flask import request
 
 import database
 from models.models import Product, Category, Inventory
@@ -16,6 +17,10 @@ class Products(Resource):
     @marshal_with(product_fields)
     def post(self):
         args = post_product_args.parse_args()
+        image = request.files["image"]
+        print(image)
+        if image:
+            print(image)
         category = Category().query.filter_by(id=args["category_id"]).first()
         new_product = Product(
             name=args["name"],
@@ -45,6 +50,14 @@ class Products(Resource):
 
 
 class ProductOperations(Resource):
+    @marshal_with(product_fields)
+    def get(self, id):
+        product = Product.query.filter_by(id=id).first()
+        if not product:
+            abort(404, message="Product not found")
+        setattr(product, "category", product.category)
+        return product, 200
+
     @marshal_with(product_fields)
     def patch(self, id):
         args = patch_product_args.parse_args(strict=True)
