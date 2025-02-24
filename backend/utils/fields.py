@@ -1,14 +1,14 @@
 from flask_restful import fields
 
+category_fields = {"id": fields.Integer, "name": fields.String}
+
 product_fields = {
     "id": fields.Integer,
     "name": fields.String,
     "quantity": fields.Integer,
     "price": fields.Float,
-    "category_name": fields.String,
+    "category": fields.Nested(nested=category_fields),
 }
-
-category_fields = {"id": fields.Integer, "name": fields.String}
 
 nested_order_fields = {
     "id": fields.Integer,
