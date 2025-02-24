@@ -30,3 +30,5 @@ user_fields = {
     "email": fields.String,
     "address": fields.String,
 }
+
+stripe_get_publishable_key = {"public_key": fields.String}
