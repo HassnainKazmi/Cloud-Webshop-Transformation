@@ -1,18 +1,22 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { motion } from "framer-motion";
 
 interface ProductCardProps {
   id: number;
   name: string;
-  description: string;
+  description?: string;
   price: number;
-  image: string;
+  image?: string;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ id, name, description, price, image }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
+  const [isAdded, setIsAdded] = useState(false);
   const navigate = useNavigate();
   const { dispatch } = useCart();
 
@@ -22,16 +26,34 @@ const ProductCard: React.FC<ProductCardProps> = ({ id, name, description, price,
     setHasError(true);
   };
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsAdded(true);
+
     dispatch({
       type: "ADD_TO_CART",
       payload: { id, name, price, quantity: 1, image },
     });
+
+    // Show Toast Notification
+    toast.success(`${name} added to cart! 🛒`, {
+      position: "top-right",
+      autoClose: 1500,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: true,
+      theme: "light",
+    });
+
+    setTimeout(() => setIsAdded(false), 1200);
   };
 
   return (
-    <div
+    <motion.div
       className="product-card group relative rounded-lg shadow-lg border border-gray-200 overflow-hidden transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl cursor-pointer"
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.98 }}
       onClick={() => navigate(`/product/${id}`)}
     >
       {/* Product Image */}
@@ -44,7 +66,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ id, name, description, price,
         {hasError ? (
           <div className="text-gray-500 text-sm">Image not available</div>
         ) : (
-          <img
+          <motion.img
             src={image}
             alt={name}
             className={`w-full h-40 object-cover transition-transform duration-300 ease-in-out transform ${
@@ -52,8 +74,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ id, name, description, price,
             }`}
             onLoad={handleImageLoad}
             onError={handleImageError}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
           />
         )}
+
         {/* Minimal Blur on Hover with Overlay */}
         <div className="absolute inset-0 bg-black bg-opacity-10 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300 ease-in-out">
           <span className="text-white text-lg font-semibold">View Details</span>
@@ -66,27 +92,28 @@ const ProductCard: React.FC<ProductCardProps> = ({ id, name, description, price,
         <p className="text-sm text-gray-500 mt-2">{description}</p>
         <p className="text-lg font-semibold text-blue-600 mt-3">${price.toFixed(2)}</p>
 
-        {/* Add to Cart Button */}
-        <button
-          className="mt-4 w-full px-6 py-3 bg-green-500 text-white text-lg font-medium rounded-lg shadow-md hover:bg-green-600 hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105"
-          onClick={(e) => {
-            e.stopPropagation();
-            handleAddToCart();
+        {/* Add to Cart Button with Interactive Feedback */}
+        <motion.button
+          className="mt-4 w-full px-6 py-3 text-white text-lg font-medium rounded-lg shadow-md transition-all duration-300 ease-in-out transform hover:scale-105"
+          style={{
+            backgroundColor: isAdded ? "#10B981" : "#16A34A",
+            boxShadow: isAdded ? "0px 4px 15px rgba(16, 185, 129, 0.4)" : "none",
           }}
+          onClick={handleAddToCart}
+          whileTap={{ scale: 0.9 }}
         >
-          Add to Cart
-        </button>
+          {isAdded ? "✔ Added" : "Add to Cart"}
+        </motion.button>
 
+        {/* Buy Now Button */}
         <button
           className="mt-4 w-full px-6 py-3 bg-orange-500 text-white text-lg font-medium rounded-lg shadow-md hover:bg-orange-600 hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105"
-          onClick={() => {
-            // alert("Buy Now functionality to be implemented");
-          }}
+          onClick={() => navigate(`/checkout?product=${id}`)}
         >
           Buy Now
         </button>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

@@ -44,10 +44,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
         <h3 className="text-md font-semibold mb-2">Categories</h3>
         <div className="space-y-3">
           {categories.map((category) => (
-            <label
-              key={category}
-              className="flex items-center space-x-2 cursor-pointer"
-            >
+            <label key={category} className="flex items-center space-x-2 cursor-pointer">
               <input
                 type="checkbox"
                 value={category}

@@ -15,7 +15,7 @@ const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
   setPriceRange,
 }) => {
   if (!priceRange) {
-    return null; // Avoid rendering if priceRange is null
+    return null;
   }
 
   return (
@@ -30,40 +30,48 @@ const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
         max={maxPrice}
         values={priceRange}
         onChange={(values) => setPriceRange([values[0], values[1]])}
-        renderTrack={({ props, children }) => (
-          <div
-            {...props}
-            style={{
-              height: "6px",
-              width: "100%",
-              background: getTrackBackground({
-                values: priceRange,
-                colors: ["#d3d3d3", "#007bff", "#d3d3d3"],
-                min: minPrice,
-                max: maxPrice,
-              }),
-              borderRadius: "4px",
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            {children}
-          </div>
-        )}
-        renderThumb={({ props }) => (
-          <div
-            {...props}
-            style={{
-              height: "16px",
-              width: "16px",
-              marginRight: "-20px",
-              marginTop: "6px",
-              backgroundColor: "#007bff",
-              borderRadius: "50%",
-              boxShadow: "0px 2px 6px #aaa",
-            }}
-          />
-        )}
+        renderTrack={({ props, children }) => {
+          const { key, ...restProps } = props;
+          return (
+            <div
+              key={key}
+              {...restProps}
+              style={{
+                height: "6px",
+                width: "100%",
+                background: getTrackBackground({
+                  values: priceRange,
+                  colors: ["#d3d3d3", "#007bff", "#d3d3d3"],
+                  min: minPrice,
+                  max: maxPrice,
+                }),
+                borderRadius: "4px",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              {children}
+            </div>
+          );
+        }}
+        renderThumb={({ props }) => {
+          const { key, ...restProps } = props;
+          return (
+            <div
+              key={key}
+              {...restProps}
+              style={{
+                height: "16px",
+                width: "16px",
+                marginRight: "-20px",
+                marginTop: "6px",
+                backgroundColor: "#007bff",
+                borderRadius: "50%",
+                boxShadow: "0px 2px 6px #aaa",
+              }}
+            />
+          );
+        }}
       />
     </div>
   );

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
 
@@ -83,7 +84,10 @@ const CartDetails: React.FC = () => {
             >
               Continue Shopping
             </button>
-            <button className="px-6 py-3 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition">
+            <button
+              className="px-6 py-3 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition"
+              onClick={() => navigate("/user/checkout")}
+            >
               Checkout
             </button>
           </div>

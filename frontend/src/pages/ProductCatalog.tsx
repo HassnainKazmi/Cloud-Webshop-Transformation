@@ -1,20 +1,31 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import products from "../data/products.json";
 import ProductCard from "../components/ProductCard";
 import FilterSidebar from "../components/FilterSidebar";
-import { useCart } from "../context/CartContext";
-import Navbar from "../components/Navbar"; // Ensure cart icon is present
-
+import Navbar from "../components/Navbar";
+import ProductType from "../types/types";
 const ProductCatalog: React.FC = () => {
-  // const { state } = useCart(); // Access cart state
-  // const navigate = useNavigate();
+  const [products, setProducts] = useState<ProductType[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [priceRange, setPriceRange] = useState<[number, number] | null>(null);
 
-  const categories = [...new Set(products.map((product) => product.category))];
+  useEffect(() => {
+    const getProducts = async () => {
+      try {
+        const response = await fetch(
+          "https://cloud-webshop-backend-gxhqcxhmguc7brg0.germanywestcentral-01.azurewebsites.net/api/products/"
+        );
+        const data = await response.json();
+        setProducts(data);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+    getProducts();
+  }, []);
+
+  const categories = [...new Set(products.map((product) => product.category.name))];
 
   const minPrice = products.length ? Math.min(...products.map((p) => p.price)) : 0;
   const maxPrice = products.length ? Math.max(...products.map((p) => p.price)) : 100;
@@ -32,9 +43,15 @@ const ProductCatalog: React.FC = () => {
   const filteredProducts = products.filter((product) => {
     const matchesSearch =
       product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(product.category);
-    const matchesPrice = priceRange && product.price >= priceRange[0] && product.price <= priceRange[1];
+      (product.description &&
+        product.description.toLowerCase().includes(searchQuery.toLowerCase()));
+
+    const matchesCategory =
+      selectedCategories.length === 0 || selectedCategories.includes(product.category.name);
+
+    const matchesPrice =
+      priceRange && product.price >= priceRange[0] && product.price <= priceRange[1];
+
     return matchesSearch && matchesCategory && matchesPrice;
   });
 
