@@ -2,7 +2,7 @@ from flask_restful import reqparse, inputs
 
 # POST order arguments
 post_order_arguments = reqparse.RequestParser()
-post_order_arguments.add_argument("user_id", type=int, required=True)
+post_order_arguments.add_argument("user_id", type=int, required=False)
 post_order_arguments.add_argument(
     "products",
     type=list,
