@@ -1,5 +1,6 @@
 from flask_restful import Resource, marshal_with, abort
 from sqlalchemy import and_
+from datetime import datetime
 
 import database
 from models.models import Order as OrderModel, User, Product, OrderItem, Inventory
@@ -102,8 +103,9 @@ class OrderOperations(Resource):
                     400,
                     message=f"Product with id {required_product_id} does not have sufficient quantity",
                 )
+        total_price = self._calculate_total_price(products, order_products)
         order = OrderModel(
-            total_price=self._calculate_total_price(products, order_products),
+            total_price=total_price,
             items_count=len(order_products),
             user_info=user,
         )
@@ -115,6 +117,7 @@ class OrderOperations(Resource):
         database.db.session.add_all(order_items_list)
         database.db.session.commit()
         updated_inventory_data = []
+        low_quantity_warning_message = ""
         for inventory_item in (
             Inventory.query.join(Product).filter(Product.id.in_(product_ids)).all()
         ):
@@ -133,16 +136,25 @@ class OrderOperations(Resource):
                 inventory_item.stock_quantity
             )
             if inventory_item.stock_quantity < 10:
-                admin_user = User.query.filter(User.is_admin).first()
-                if send_mail(
-                    subject="Order Delivered",
-                    message=f"The product with id {inventory_item.product_id} is low in stock!",
-                    recipients=[admin_user.email],
-                ):
-                    print("email sent!")
+                low_quantity_warning_message += (
+                    f"The product with id {inventory_item.product_id} is low in stock!"
+                )
             updated_inventory_data.append(inventory_item.__dict__)
         database.db.session.bulk_update_mappings(Inventory, updated_inventory_data)
         database.db.session.commit()
+        send_mail(
+            subject="Order Confirmed",
+            message="This is order confirmation message",
+            template_id=39200651,
+            recipient=user.email,
+            name=user.first_name,
+            date="2025-02-28",
+            receipt_details=[
+                {"description": product.name, "amount": product.price}
+                for product in products
+            ],
+            total=total_price,
+        )
         order_dict = order.__dict__
         order_dict["products"] = [o.product_info for o in order.order_items]
         return order_dict, 201
