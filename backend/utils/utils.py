@@ -1,7 +1,9 @@
 import os
-from flask_mail import Message
+from postmarker.core import PostmarkClient
 from app import mail
 from .enums import StockLevel
+
+postmark = PostmarkClient(server_token=os.getenv("POST_MARKER_SERVER_API_TOKEN"))
 
 
 def calculate_stock_level(quantity):
@@ -15,13 +17,23 @@ def calculate_stock_level(quantity):
         return StockLevel.OUT_OF_STOCK
 
 
-def send_mail(subject: str, message: str, recipients: list[str]):
+def send_mail(subject: str, message: str, recipient: str, template_id: int, **kwargs):
     try:
-        email = Message(
-            subject=subject, sender=os.getenv("MAIL_USERNAME"), recipients=recipients
+        print(kwargs)
+        postmark.emails.send_with_template(
+            From=os.getenv("POST_MARK_SENDER"),
+            To=recipient,
+            TemplateId=template_id,
+            # TemplateModel={
+            #     "name":"John Doe",
+            #     "date":"John Doe",
+            #     "description":"John Doe",
+            #     "amount":"John Doe",
+            #     "total":"John Doe",
+            #     "product_name":"John Doe"
+            # }
+            TemplateModel=kwargs,
         )
-        email.body = message
-        mail.send(email)
         return True
     except Exception as e:
         print(e)
