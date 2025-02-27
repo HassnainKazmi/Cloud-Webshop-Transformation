@@ -1,4 +1,5 @@
 from flask_restful import Resource, marshal_with, abort
+from sqlalchemy import and_
 
 import database
 from models.models import Order as OrderModel, User, Product, OrderItem, Inventory
@@ -79,10 +80,14 @@ class OrderOperations(Resource):
         if not user:
             print("User not found! Using default from database.")
             user = User.query.filter(User.is_admin).first()
-            # abort(404, message=f"User with the id ${user_id} not found!")
         order_products = args.get("products")
         product_ids = [product["product_id"] for product in order_products]
-        products = Product.query.filter(Product.id.in_(product_ids)).all()
+        products = Product.query.filter(
+            and_(
+                Product.id.in_(product_ids),
+                Product.inventory.has(Inventory.stock_level > 0),
+            )
+        ).all()
         if len(order_products) != len(products):
             abort(404, message="One or more products not found, due to bad ids")
         products_dict = {
@@ -98,7 +103,7 @@ class OrderOperations(Resource):
                     message=f"Product with id {required_product_id} does not have sufficient quantity",
                 )
         order = OrderModel(
-            total_price=sum(int(product.price) for product in products),
+            total_price=self._calculate_total_price(products, order_products),
             items_count=len(order_products),
             user_info=user,
         )
@@ -141,3 +146,12 @@ class OrderOperations(Resource):
         order_dict = order.__dict__
         order_dict["products"] = [o.product_info for o in order.order_items]
         return order_dict, 201
+
+    def _calculate_total_price(self, products: list, order_products: list) -> int:
+        total_price = 0
+        for order in order_products:
+            product = next(
+                product for product in products if product.id == order["product_id"]
+            )
+            total_price = product.price * order["quantity"]
+        return total_price
