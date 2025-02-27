@@ -77,7 +77,9 @@ class OrderOperations(Resource):
         user_id = args.get("user_id")
         user = User.query.filter_by(id=user_id).first()
         if not user:
-            abort(404, message=f"User with the id ${user_id} not found!")
+            print("User not found! Using default from database.")
+            user = User.query.filter(User.is_admin).first()
+            # abort(404, message=f"User with the id ${user_id} not found!")
         order_products = args.get("products")
         product_ids = [product["product_id"] for product in order_products]
         products = Product.query.filter(Product.id.in_(product_ids)).all()
@@ -126,7 +128,7 @@ class OrderOperations(Resource):
                 inventory_item.stock_quantity
             )
             if inventory_item.stock_quantity < 10:
-                admin_user = User.query.filter(User.is_admin == True).first()
+                admin_user = User.query.filter(User.is_admin).first()
                 if send_mail(
                     subject="Order Delivered",
                     message=f"The product with id {inventory_item.product_id} is low in stock!",
