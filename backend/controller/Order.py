@@ -110,6 +110,7 @@ class OrderOperations(Resource):
         database.db.session.add_all(order_items_list)
         database.db.session.commit()
         updated_inventory_data = []
+        print("Updating inventory")
         for inventory_item in (
             Inventory.query.join(Product).filter(Product.id.in_(product_ids)).all()
         ):
@@ -121,9 +122,11 @@ class OrderOperations(Resource):
                 ),
                 None,
             )
+            print(order_product)
             inventory_item.stock_quantity = (
                 inventory_item.stock_quantity - order_product["quantity"]
             )
+            print(inventory_item.stock_quantity)
             inventory_item.stock_level = calculate_stock_level(
                 inventory_item.stock_quantity
             )
@@ -136,6 +139,7 @@ class OrderOperations(Resource):
                 ):
                     print("email sent!")
             updated_inventory_data.append(inventory_item.__dict__)
+            print("updated_inventory_data", updated_inventory_data)
         database.db.session.bulk_update_mappings(Inventory, updated_inventory_data)
         database.db.session.commit()
         order_dict = order.__dict__

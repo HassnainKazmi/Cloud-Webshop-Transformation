@@ -5,11 +5,11 @@ from .enums import StockLevel
 
 
 def calculate_stock_level(quantity):
-    if quantity > 30:
+    if quantity >= 30:
         return StockLevel.HIGH
-    elif quantity > 20:
+    elif quantity < 30 and quantity >= 20:
         return StockLevel.MEDIUM
-    elif quantity < 5:
+    elif quantity < 20 and quantity > 0:
         return StockLevel.LOW
     if quantity == 0:
         return StockLevel.OUT_OF_STOCK
