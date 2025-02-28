@@ -29,21 +29,21 @@ const CartSidebar = () => {
                 <div className="flex items-center justify-between mt-2">
                   <button
                     onClick={() => handleRemoveFromCart(item.id)}
-                    className="text-red-600 underline"
+                    className="text-red-600 underline cursor-pointer"
                   >
                     Remove
                   </button>
                   <div className="flex items-center">
                     <button
                       onClick={() => handleQuantityChange(item.id, Math.max(item.quantity - 1, 1))}
-                      className="px-2"
+                      className="px-2 cursor-pointer"
                     >
                       -
                     </button>
                     <span className="mx-2">{item.quantity}</span>
                     <button
                       onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
-                      className="px-2"
+                      className="px-2 cursor-pointer"
                     >
                       +
                     </button>
