@@ -66,6 +66,7 @@ class Products(Resource):
         for product in products:
             product_dict = product.__dict__
             product_dict["category_name"] = product.category.name
+            product_dict["quantity"] = product.inventory.stock_quantity
             products_list.append(product_dict)
         return products_list
 
@@ -77,6 +78,7 @@ class ProductOperations(Resource):
         if not product:
             abort(404, message="Product not found")
         setattr(product, "category", product.category)
+        setattr(product, "quantity", product.inventory.stock_quantity)
         return product, 200
 
     @marshal_with(product_fields)
