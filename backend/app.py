@@ -6,6 +6,8 @@ import stripe
 from flask_mail import Mail
 from dotenv import load_dotenv
 
+from utils.stripe_request_arguments import post_stripe_arguments
+
 app_env = os.getenv("APP_ENV", "development")
 
 if app_env == "development":
@@ -35,11 +37,11 @@ app.config["MAIL_USE_SSL"] = True
 
 mail = Mail(app)
 
-import controller.Products
+import controller.Products  # noqa: E402
 import controller.Category  # noqa: E402
-import controller.Order
-import controller.User
-import controller.Payment
+import controller.Order  # noqa: E402
+import controller.User  # noqa: E402
+import controller.Payment  # noqa: E402
 
 # Products endpoints
 api.add_resource(controller.Products.Products, "/api/products/")
@@ -65,19 +67,22 @@ def root():
 
 @app.route("/create-checkout-session", methods=["POST"])
 def create_checkout_session():
+    args = post_stripe_arguments.parse_args()
+    line_items = args.get("line_items")
     session = stripe.checkout.Session.create(
-        line_items=[
-            {
-                "price_data": {
-                    "currency": "eur",
-                    "product_data": {
-                        "name": "T-shirt",
-                    },
-                    "unit_amount": 2000,
-                },
-                "quantity": 1,
-            }
-        ],
+        # line_items=[
+        #     {
+        #         "price_data": {
+        #             "currency": "eur",
+        #             "product_data": {
+        #                 "name": "T-shirt",
+        #             },
+        #             "unit_amount": 2000,
+        #         },
+        #         "quantity": 1,
+        #     }
+        # ],
+        line_items=line_items,
         mode="payment",
         ui_mode="embedded",
         return_url=os.getenv("PAYMENT_RESULT_URL")
