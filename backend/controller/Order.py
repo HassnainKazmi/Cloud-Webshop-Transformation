@@ -7,7 +7,7 @@ from models.models import Order as OrderModel, User, Product, OrderItem, Invento
 
 from utils.fields import order_fields
 from utils.order_request_arguments import post_order_arguments, patch_order_arguments
-from utils.utils import calculate_stock_level, send_mail
+from utils.utils import calculate_stock_level, send_mail_gmail, send_mail
 from utils.enums import OrderStatus
 
 
@@ -38,21 +38,19 @@ class Order(Resource):
             )
         user_info = order.user_info
         order.status = new_status
+        print("new_status", new_status)
         database.db.session.commit()
-        if order.status == OrderStatus.CONFIRMED:
-            if send_mail(
-                subject="Order Delivered",
-                message="Your order has been confirmed",
+        if (
+            order.status == OrderStatus.CONFIRMED
+            or order.status == OrderStatus.DELIVERED
+        ):
+            send_mail_gmail(
+                subject="Order Status Updated",
                 recipients=[user_info.email],
-            ):
-                print("Order confirmation email sent.")
-        if order.status == OrderStatus.DELIVERED:
-            if send_mail(
-                subject="Order Delivered",
-                message="Your order has been delivered",
-                recipients=[user_info.email],
-            ):
-                print("Order delivery email sent.")
+                template_name="order_status.html",
+                order_id=order.id,
+                status=order.status,
+            )
         order_dict = order.__dict__
         order_dict["products"] = [o.product_info for o in order.order_items]
         return order_dict, 200
@@ -139,19 +137,36 @@ class OrderOperations(Resource):
                 low_quantity_ids.append(inventory_item.id)
             updated_inventory_data.append(inventory_item.__dict__)
         if len(low_quantity_ids) > 0:
-            send_mail(template_id=39208561, recipient=user.email, ids=low_quantity_ids)
+            send_mail_gmail(
+                subject="Low Stock Alert",
+                recipients=[user.email],
+                template_name="low_stock.html",
+                ids=low_quantity_ids,
+            )
         database.db.session.bulk_update_mappings(Inventory, updated_inventory_data)
         database.db.session.commit()
-        send_mail(
-            template_id=39200651,
-            recipient=user.email,
-            name=user.first_name,
+        # send_mail(
+        #     template_id=39200651,
+        #     recipient=user.email,
+        #     name=user.first_name,
+        #     date=datetime.today().strftime("%m/%d/%Y"),
+        #     receipt_details=[
+        #         {"description": product.name, "amount": product.price}
+        #         for product in products
+        #     ],
+        #     total=total_price,
+        # )
+        send_mail_gmail(
+            subject="Order Confirmation",
+            recipients=[user.email],
+            template_name="order_confirm.html",
+            name={user.first_name},
             date=datetime.today().strftime("%m/%d/%Y"),
             receipt_details=[
                 {"description": product.name, "amount": product.price}
                 for product in products
             ],
-            total=total_price,
+            total_price=total_price,
         )
         order_dict = order.__dict__
         order_dict["products"] = [o.product_info for o in order.order_items]

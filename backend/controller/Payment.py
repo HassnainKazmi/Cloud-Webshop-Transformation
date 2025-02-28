@@ -1,6 +1,5 @@
-from flask import jsonify
+from flask import jsonify, request
 from flask_restful import Resource
-from requests import request
 import stripe
 
 
