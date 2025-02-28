@@ -117,7 +117,7 @@ class OrderOperations(Resource):
         database.db.session.add_all(order_items_list)
         database.db.session.commit()
         updated_inventory_data = []
-        low_quantity_warning_message = ""
+        low_quantity_ids = []
         for inventory_item in (
             Inventory.query.join(Product).filter(Product.id.in_(product_ids)).all()
         ):
@@ -136,19 +136,17 @@ class OrderOperations(Resource):
                 inventory_item.stock_quantity
             )
             if inventory_item.stock_quantity < 10:
-                low_quantity_warning_message += (
-                    f"The product with id {inventory_item.product_id} is low in stock!"
-                )
+                low_quantity_ids.append(inventory_item.id)
             updated_inventory_data.append(inventory_item.__dict__)
+        if len(low_quantity_ids) > 0:
+            send_mail(template_id=39208561, recipient=user.email, ids=low_quantity_ids)
         database.db.session.bulk_update_mappings(Inventory, updated_inventory_data)
         database.db.session.commit()
         send_mail(
-            subject="Order Confirmed",
-            message="This is order confirmation message",
             template_id=39200651,
             recipient=user.email,
             name=user.first_name,
-            date="2025-02-28",
+            date=datetime.today().strftime("%m/%d/%Y"),
             receipt_details=[
                 {"description": product.name, "amount": product.price}
                 for product in products
