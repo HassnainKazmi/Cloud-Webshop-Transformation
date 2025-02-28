@@ -70,19 +70,19 @@ def create_checkout_session():
     args = post_stripe_arguments.parse_args()
     line_items = args.get("line_items")
     session = stripe.checkout.Session.create(
-        # line_items=[
-        #     {
-        #         "price_data": {
-        #             "currency": "eur",
-        #             "product_data": {
-        #                 "name": "T-shirt",
-        #             },
-        #             "unit_amount": 2000,
-        #         },
-        #         "quantity": 1,
-        #     }
-        # ],
-        line_items=line_items,
+        line_items=[
+            {
+                "price_data": {
+                    "currency": "eur",
+                    "product_data": {
+                        "name": "T-shirt",
+                    },
+                    "unit_amount": 2000,
+                },
+                "quantity": 1,
+            }
+        ],
+        # line_items=line_items,
         mode="payment",
         ui_mode="embedded",
         return_url=os.getenv("PAYMENT_RESULT_URL")
