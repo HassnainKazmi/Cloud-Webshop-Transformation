@@ -66,7 +66,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ id, name, description, price,
           <motion.img
             src={`${import.meta.env.VITE_IMAGE_BASE_URL}${id}.jpg`}
             alt={name}
-            className={`w-full h-40 object-cover transition-transform duration-300 ease-in-out transform ${
+            className={`w-full h-full object-cover object-top transition-transform duration-300 ease-in-out transform ${
               isLoading ? "hidden" : ""
             }`}
             onLoad={handleImageLoad}
@@ -86,7 +86,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ id, name, description, price,
         <p className="text-lg font-semibold text-blue-600 my-3">${price.toFixed(2)}</p>
 
         <motion.button
-          className="mt-auto w-full px-6 py-3 text-white text-lg font-medium rounded-lg shadow-md transition-all duration-300 ease-in-out transform hover:scale-105"
+          className="mt-auto w-full px-6 py-3 text-white text-lg font-medium rounded-lg shadow-md transition-all duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
           style={{
             backgroundColor: isAdded ? "#10B981" : "#16A34A",
             boxShadow: isAdded ? "0px 4px 15px rgba(16, 185, 129, 0.4)" : "none",

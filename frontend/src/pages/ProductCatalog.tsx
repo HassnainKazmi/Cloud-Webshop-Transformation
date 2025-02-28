@@ -80,7 +80,7 @@ const ProductCatalog: React.FC = () => {
         >
           <div className="flex justify-between items-center p-4 md:hidden">
             <button
-              className="text-gray-600 hover:text-gray-900 ml-auto"
+              className="text-gray-600 hover:text-gray-900 ml-auto cursor-pointer"
               onClick={() => setIsFilterOpen(false)}
             >
               ✕
@@ -125,7 +125,7 @@ const ProductCatalog: React.FC = () => {
                     setSelectedCategories([]);
                     setPriceRange([minPrice, maxPrice]);
                   }}
-                  className="px-6 py-3 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition"
+                  className="px-6 py-3 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition cursor-pointer"
                 >
                   Reset Filters
                 </button>

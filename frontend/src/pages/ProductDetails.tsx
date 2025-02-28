@@ -84,7 +84,7 @@ const ProductDetails: React.FC = () => {
         <h1 className="text-xl font-bold text-red-600">Product Not Found</h1>
         <button
           onClick={() => window.history.back()}
-          className="mt-4 px-6 py-3 bg-gray-600 text-white rounded-lg shadow-md hover:bg-gray-700 transition-all"
+          className="mt-4 px-6 py-3 bg-gray-600 text-white rounded-lg shadow-md hover:bg-gray-700 transition-all cursor-pointer"
         >
           Back to Catalog
         </button>
@@ -93,10 +93,10 @@ const ProductDetails: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto my-10 px-4 py-6 flex-grow ">
+    <div className="container mx-auto my-10 px-4 py-6 flex-grow">
       <button
         onClick={() => window.history.back()}
-        className="mb-4 mt-10 flex items-center px-4 py-2 bg-gray-200 text-gray-700 text-sm font-medium rounded-lg shadow-md hover:bg-gray-300"
+        className="mb-4 mt-10 flex items-center px-4 py-2 bg-gray-200 text-gray-700 text-sm font-medium rounded-lg shadow-md hover:bg-gray-300 cursor-pointer"
       >
         ← Back to Catalog
       </button>
@@ -129,11 +129,13 @@ const ProductDetails: React.FC = () => {
             <p className="text-2xl md:text-2xl font-semibold text-blue-600">
               ${product.price.toFixed(2)}
             </p>
+            {/* Stock availability logic */}
+            {product.quantity < 10 && <p className="text-red-600 font-semibold">Stock is low!</p>}
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4">
             <motion.button
-              className="w-full sm:w-auto px-6 py-3 text-white font-medium rounded-lg shadow-md hover:scale-105"
+              className="w-full sm:w-auto px-6 py-3 text-white font-medium rounded-lg shadow-md hover:scale-105 cursor-pointer"
               style={{
                 backgroundColor: isAdded ? "#10B981" : "#16A34A",
                 boxShadow: isAdded ? "0px 4px 15px rgba(16, 185, 129, 0.4)" : "none",
@@ -144,7 +146,7 @@ const ProductDetails: React.FC = () => {
               {isAdded ? "✔ Added" : "Add to Cart"}
             </motion.button>
             <button
-              className="w-full sm:w-auto px-6 py-3 bg-orange-500 text-white font-medium rounded-lg shadow-md hover:scale-105"
+              className="w-full sm:w-auto px-6 py-3 bg-orange-500 text-white font-medium rounded-lg shadow-md hover:scale-105 cursor-pointer"
               onClick={() => handleAddToCart(true)}
             >
               Buy Now

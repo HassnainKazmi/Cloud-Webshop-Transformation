@@ -65,7 +65,7 @@ const CartDetails: React.FC = () => {
                     <h3 className="text-lg font-semibold text-gray-800">{item.name}</h3>
                     <button
                       onClick={() => handleRemoveFromCart(item.id)}
-                      className="text-sm text-red-600 hover:underline hover:text-red-800"
+                      className="text-sm text-red-600 hover:underline hover:text-red-800 cursor-pointer"
                     >
                       Remove
                     </button>
@@ -75,19 +75,19 @@ const CartDetails: React.FC = () => {
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
-                      className="px-3 py-1 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition"
+                      className="px-3 py-1 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition cursor-pointer"
                     >
                       -
                     </button>
                     <span className="text-lg font-medium">{item.quantity}</span>
                     <button
                       onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
-                      className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+                      className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition cursor-pointer"
                     >
                       +
                     </button>
                   </div>
-                  <span className="text-blue-600 text-lg font-semibold min-w-[80px] text-right sm:text-left">
+                  <span className="text-blue-600 text-lg font-semibold min-w-[80px] text-right sm:text-left cursor-pointer">
                     ${(item.price * item.quantity).toFixed(2)}
                   </span>
                 </div>
@@ -101,12 +101,12 @@ const CartDetails: React.FC = () => {
           <div className="mt-6 flex flex-col sm:flex-row justify-between gap-4">
             <button
               onClick={() => navigate("/")}
-              className="px-6 py-3 bg-gray-500 text-white rounded-lg shadow hover:bg-gray-600 transition w-full sm:w-auto"
+              className="px-6 py-3 bg-gray-500 text-white rounded-lg shadow hover:bg-gray-600 transition w-full sm:w-auto cursor-pointer"
             >
               Continue Shopping
             </button>
             <button
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition w-full sm:w-auto"
+              className="px-6 py-3 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition w-full sm:w-auto cursor-pointer"
               onClick={() => handleCheckOut()}
             >
               Checkout
@@ -124,7 +124,7 @@ const CartDetails: React.FC = () => {
           <p className="text-gray-500 mb-6">Browse products and add items to your cart.</p>
           <button
             onClick={() => navigate("/")}
-            className="px-6 py-3 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition w-full sm:w-auto"
+            className="px-6 py-3 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition w-full sm:w-auto cursor-pointer"
           >
             Back to Shopping
           </button>
