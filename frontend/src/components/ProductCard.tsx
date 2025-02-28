@@ -34,6 +34,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ id, name, description, price,
       type: "ADD_TO_CART",
       payload: { id, name, price, quantity: 1, image },
     });
+
     toast.success(`${name} added to cart! 🛒`, {
       position: "top-right",
       autoClose: 1500,
@@ -49,7 +50,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ id, name, description, price,
 
   return (
     <motion.div
-      className="product-card group relative rounded-lg shadow-lg border border-gray-200 overflow-hidden transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl cursor-pointer"
+      className="product-card group relative rounded-lg shadow-lg border border-gray-200 overflow-hidden transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl cursor-pointer flex flex-col"
       whileTap={{ scale: 0.98 }}
       onClick={() => navigate(`/product/${id}`)}
     >
@@ -79,12 +80,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ id, name, description, price,
           <span className="text-white text-lg font-semibold">View Details</span>
         </div>
       </div>
-      <div className="p-4">
+      <div className="p-4 flex flex-col flex-grow">
         <h3 className="text-lg font-bold text-gray-800">{name}</h3>
-        <p className="text-sm text-gray-500 mt-2">{description}</p>
-        <p className="text-lg font-semibold text-blue-600 mt-3">${price.toFixed(2)}</p>
+        <p className="text-sm text-gray-500 mt-2 flex-grow">{description}</p>
+        <p className="text-lg font-semibold text-blue-600 my-3">${price.toFixed(2)}</p>
+
         <motion.button
-          className="mt-4 w-full px-6 py-3 text-white text-lg font-medium rounded-lg shadow-md transition-all duration-300 ease-in-out transform hover:scale-105"
+          className="mt-auto w-full px-6 py-3 text-white text-lg font-medium rounded-lg shadow-md transition-all duration-300 ease-in-out transform hover:scale-105"
           style={{
             backgroundColor: isAdded ? "#10B981" : "#16A34A",
             boxShadow: isAdded ? "0px 4px 15px rgba(16, 185, 129, 0.4)" : "none",

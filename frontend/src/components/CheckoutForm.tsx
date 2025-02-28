@@ -49,14 +49,19 @@ const CheckoutForm = () => {
   }, [fetchClientSecret]);
 
   return (
-    <div id="checkout">
-      {clientSecret ? (
-        <EmbeddedCheckoutProvider stripe={stripePromise} options={{ clientSecret }}>
-          <EmbeddedCheckout />
-        </EmbeddedCheckoutProvider>
-      ) : (
-        <p>Loading checkout...</p>
-      )}
+    <div id="checkout" className="flex justify-center items-start min-h-screen p-4 bg-gray-100">
+      <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg p-6 sm:p-8 md:p-10 lg:p-12 flex flex-col items-center">
+        {/* Payment Section */}
+        <div className="w-full max-w-md md:max-w-lg lg:max-w-xl">
+          {clientSecret ? (
+            <EmbeddedCheckoutProvider stripe={stripePromise} options={{ clientSecret }}>
+              <EmbeddedCheckout />
+            </EmbeddedCheckoutProvider>
+          ) : (
+            <p className="text-center text-gray-700">Loading checkout...</p>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

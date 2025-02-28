@@ -10,9 +10,8 @@ const Navbar: React.FC = () => {
 
   return (
     <nav
-      className="fixed top-0 left-0 w-full bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 shadow-lg z-50
-      transition-transform duration-500 ease-out will-change-transform"
-      style={{ transform: "translateZ(0)" }} // Forces GPU acceleration
+      className="fixed top-0 left-0 w-full bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 shadow-lg z-50 transition-all duration-300"
+      style={{ transform: "translateZ(0)" }}
     >
       <div className="container mx-auto px-6 py-4 flex justify-between items-center">
         <h1

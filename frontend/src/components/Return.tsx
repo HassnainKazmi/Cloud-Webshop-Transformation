@@ -10,8 +10,13 @@ const Return = () => {
       const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
       const sessionId = urlParams.get("session_id");
-      const res = await fetch("http://0.0.0.0:5000/api/stripe/status?session_id=" + sessionId);
+      console.log("making api all with id: " + sessionId);
+      const res = await fetch(
+        "https://cloud-webshop-backend-gxhqcxhmguc7brg0.germanywestcentral-01.azurewebsites.net/api/stripe/status?session_id=" +
+          sessionId
+      );
       const checkoutStatus = await res.json();
+      console.log(checkoutStatus);
       console.log({ checkoutStatus });
       if (checkoutStatus) {
         setStatus(checkoutStatus.status);
