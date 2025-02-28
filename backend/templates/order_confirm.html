@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Order Confirmation</title>
+  </head>
+  <body>
+    <h2>Hello, {{ name }}!</h2>
+    <p>Thank you for you Order.</p>
+    {% for p in receipt_details %}
+    <li><strong>{{ p.description }}</strong> - Status: {{ p.amount }}</li>
+    {% endfor %} Order Date: {{date}}
+  </body>
+</html>

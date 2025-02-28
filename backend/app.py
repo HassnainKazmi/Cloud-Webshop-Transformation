@@ -2,12 +2,15 @@ import os
 import logging
 import sys
 
-from flask import Flask, jsonify, abort, request
-from flask_restful import Api
-from flask_cors import CORS
-import stripe
-from utils.stripe_request_arguments import post_stripe_arguments
 from dotenv import load_dotenv
+from flask import Flask, jsonify, abort
+from flask_restful import Api
+from flask_mail import Mail
+from flask_cors import CORS
+
+import stripe
+
+from utils.stripe_request_arguments import post_stripe_arguments
 
 logging.basicConfig(level=logging.DEBUG, stream=sys.stdout, force=True)
 logger = logging.getLogger()
@@ -30,6 +33,15 @@ app = Flask(__name__)
 api = Api(app)
 
 CORS(app)
+
+app.config["MAIL_SERVER"] = os.getenv("MAIL_SERVER")
+app.config["MAIL_PORT"] = os.getenv("MAIL_PORT")
+app.config["MAIL_USERNAME"] = os.getenv("MAIL_USERNAME")
+app.config["MAIL_PASSWORD"] = os.getenv("MAIL_PASSWORD")
+app.config["MAIL_USE_TLS"] = False
+app.config["MAIL_USE_SSL"] = True
+
+mail = Mail(app)
 
 app.logger.setLevel(logging.DEBUG)
 
