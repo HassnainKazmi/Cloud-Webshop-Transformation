@@ -83,7 +83,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ id, name, description, price,
       <div className="p-4 flex flex-col flex-grow">
         <h3 className="text-lg font-bold text-gray-800">{name}</h3>
         <p className="text-sm text-gray-500 mt-2 flex-grow">{description}</p>
-        <p className="text-lg font-semibold text-blue-600 my-3">${price.toFixed(2)}</p>
+        <p className="text-lg font-semibold text-blue-600 my-3">€{price.toFixed(2)}</p>
 
         <motion.button
           className="mt-auto w-full px-6 py-3 text-white text-lg font-medium rounded-lg shadow-md transition-all duration-300 ease-in-out transform hover:scale-105 cursor-pointer"

@@ -92,7 +92,7 @@ const CartDetails: React.FC = () => {
                     </button>
                   </div>
                   <span className="text-blue-600 text-lg font-semibold min-w-[80px] text-right sm:text-left cursor-pointer">
-                    ${(item.price * item.quantity).toFixed(2)}
+                    €{(item.price * item.quantity).toFixed(2)}
                   </span>
                 </div>
               </li>
@@ -100,7 +100,7 @@ const CartDetails: React.FC = () => {
           </ul>
           <div className="mt-8 text-right">
             <p className="text-lg font-bold text-gray-800">Total Items: {totalItems}</p>
-            <p className="text-xl font-bold text-blue-600">Total Price: ${totalPrice.toFixed(2)}</p>
+            <p className="text-xl font-bold text-blue-600">Total Price: €{totalPrice.toFixed(2)}</p>
           </div>
           <div className="mt-6 flex flex-col sm:flex-row justify-between gap-4">
             <button

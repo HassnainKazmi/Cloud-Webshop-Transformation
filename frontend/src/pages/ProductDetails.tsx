@@ -127,9 +127,8 @@ const ProductDetails: React.FC = () => {
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900">{product.name}</h1>
             <p className="text-gray-700 leading-relaxed">{product.description}</p>
             <p className="text-2xl md:text-2xl font-semibold text-blue-600">
-              ${product.price.toFixed(2)}
+              €{product.price.toFixed(2)}
             </p>
-            {/* Stock availability logic */}
             {product.quantity < 10 && <p className="text-red-600 font-semibold">Stock is low!</p>}
           </div>
 
