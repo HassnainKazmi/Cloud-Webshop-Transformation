@@ -120,7 +120,7 @@ const ProductDetails: React.FC = () => {
               hasImageError ? placeholderImage : `${import.meta.env.VITE_IMAGE_BASE_URL}${id}.jpg`
             }
             alt={product.name}
-            className={`max-w-full max-h-[500px] object-contain rounded-lg shadow-lg border border-gray-200 transition-transform duration-300 ease-in-out hover:scale-105 ${
+            className={`max-w-full max-h-[400px] object-contain rounded-lg shadow-lg border border-gray-200 transition-transform duration-300 ease-in-out hover:scale-105 ${
               isImageLoading ? "hidden" : ""
             }`}
             onLoad={() => setIsImageLoading(false)}

@@ -56,7 +56,7 @@ const ProductCatalog: React.FC = () => {
   });
 
   return (
-    <div className="container mx-auto my-10 px-4 py-6">
+    <div className="container mx-auto my-10 py-6">
       <Navbar />
 
       <h1 className="text-2xl font-bold text-center my-6">Product Catalog</h1>
