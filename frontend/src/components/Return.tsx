@@ -51,15 +51,26 @@ const Return = () => {
 
   if (checkoutData.status === "complete") {
     return (
-      <div className="flex justify-center items-center min-h-screen">
+      <div className="flex justify-center items-center min-h-screen bg-gray-100">
         <section className="bg-white p-6 rounded-lg shadow-lg text-center max-w-md w-full">
+          <div className="flex justify-center items-center mb-4">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-12 h-12 text-green-500"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+            >
+              <path d="M9 16.2l-5.2-5.2-1.4 1.4L9 19 22 6 20.6 4.6 9 16.2z" />
+            </svg>
+          </div>
           <p className="text-lg font-semibold text-gray-700">
-            We appreciate your business! A confirmation email will be sent to{" "}
+            <span className="text-green-600 font-bold">Payment successful!</span> Thank you for your
+            purchase. A confirmation email has been sent to{" "}
             <span className="text-blue-600 font-bold">{checkoutData.customerEmail}</span>.
           </p>
           <button
             onClick={handleClick}
-            className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+            className="mt-5 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all"
           >
             Back to Home!
           </button>
