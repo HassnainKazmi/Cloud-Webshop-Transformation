@@ -7,6 +7,13 @@ post_product_args.add_argument(
     "name", type=str, required=True, help="Name is required", location="form"
 )
 post_product_args.add_argument(
+    "description",
+    type=str,
+    required=True,
+    help="Description is required",
+    location="form",
+)
+post_product_args.add_argument(
     "quantity", type=int, required=True, help="Quantity is required", location="form"
 )
 post_product_args.add_argument(

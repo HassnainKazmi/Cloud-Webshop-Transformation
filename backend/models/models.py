@@ -18,6 +18,9 @@ class Product(database.db.Model):
     __tablename__ = "product"
     id = database.db.Column(database.db.Integer, primary_key=True)
     name = database.db.Column(database.db.String(80), unique=False, nullable=False)
+    description = database.db.Column(
+        database.db.String(200), unique=False, nullable=False
+    )
     price = database.db.Column(database.db.Float, nullable=False)
     category_id = database.db.Column(
         database.db.Integer, database.db.ForeignKey("category.id"), nullable=False
