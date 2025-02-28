@@ -1,5 +1,5 @@
 import os
-from flask import Flask, jsonify
+from flask import Flask, jsonify, abort
 from flask_restful import Api
 from flask_cors import CORS
 import stripe
@@ -23,7 +23,6 @@ stripe_keys = {
 stripe.api_key = stripe_keys["secret_key"]
 
 app = Flask(__name__)
-app.debug = True
 api = Api(app)
 
 CORS(app)
@@ -89,6 +88,9 @@ def create_checkout_session():
             return_url=os.getenv("PAYMENT_RESULT_URL")
             + "?session_id={CHECKOUT_SESSION_ID}",
         )
+
+        if not session.client_secret:
+            abort(500, message="Client secret could not be retrived on time!")
 
         return jsonify(clientSecret=session.client_secret)
     except Exception as e:
