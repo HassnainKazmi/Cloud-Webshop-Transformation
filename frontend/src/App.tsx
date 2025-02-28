@@ -1,6 +1,7 @@
 import React from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
+import Navbar from "./components/Navbar";
 import ProductCatalog from "./pages/ProductCatalog";
 import ProductDetails from "./pages/ProductDetails";
 import CartDetails from "./pages/CartDetails";
@@ -11,6 +12,7 @@ const App: React.FC = () => {
   const location = useLocation();
   return (
     <TransitionGroup>
+      <Navbar />
       <CSSTransition key={location.key} classNames="page" timeout={300}>
         <Routes location={location}>
           <Route path="/" element={<ProductCatalog />} />

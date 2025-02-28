@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import ProductCard from "../components/ProductCard";
 import FilterSidebar from "../components/FilterSidebar";
-import Navbar from "../components/Navbar";
 import ProductType from "../types/types";
+
 const ProductCatalog: React.FC = () => {
   const [products, setProducts] = useState<ProductType[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [priceRange, setPriceRange] = useState<[number, number] | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const getProducts = async () => {
@@ -20,13 +21,14 @@ const ProductCatalog: React.FC = () => {
         setProducts(data);
       } catch (error) {
         console.error("Error fetching products:", error);
+      } finally {
+        setLoading(false);
       }
     };
     getProducts();
   }, []);
 
   const categories = [...new Set(products.map((product) => product.category.name))];
-
   const minPrice = products.length ? Math.min(...products.map((p) => p.price)) : 0;
   const maxPrice = products.length ? Math.max(...products.map((p) => p.price)) : 100;
 
@@ -56,26 +58,34 @@ const ProductCatalog: React.FC = () => {
   });
 
   return (
-    <div className="container mx-auto my-10 py-6">
-      <Navbar />
-
+    <div className="container mx-auto my-10 px-4 py-6">
       <h1 className="text-2xl font-bold text-center my-6">Product Catalog</h1>
-
-      {!isFilterOpen && (
-        <button
-          className="md:hidden bg-blue-600 text-white px-4 py-2 rounded-lg mb-4"
-          onClick={() => setIsFilterOpen(true)}
-        >
-          Open Filters
-        </button>
+      {loading && (
+        <div className="relative w-full h-1 bg-gray-200 overflow-hidden mb-4">
+          <div className="absolute inset-0 w-full h-full bg-blue-600 animate-pulse"></div>
+        </div>
       )}
+      <button
+        className="md:hidden bg-blue-600 text-white px-4 py-2 rounded-lg mb-4"
+        onClick={() => setIsFilterOpen(true)}
+      >
+        Open Filters
+      </button>
 
       <div className="flex flex-col md:flex-row gap-8">
         <div
-          className={`transition-all duration-300 ease-in-out ${
-            isFilterOpen ? "block" : "hidden md:block"
-          } md:w-1/4 w-full`}
+          className={`fixed inset-0 bg-white z-50 md:relative md:bg-transparent md:z-auto transition-transform duration-300 ease-in-out transform ${
+            isFilterOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+          } md:w-1/4 w-full shadow-lg md:shadow-none`}
         >
+          <div className="flex justify-between items-center p-4 md:hidden">
+            <button
+              className="text-gray-600 hover:text-gray-900 ml-auto"
+              onClick={() => setIsFilterOpen(false)}
+            >
+              ✕
+            </button>
+          </div>
           <FilterSidebar
             categories={categories}
             selectedCategories={selectedCategories}
@@ -89,7 +99,9 @@ const ProductCatalog: React.FC = () => {
           />
         </div>
         <div className="w-full md:w-3/4">
-          {filteredProducts.length > 0 ? (
+          {loading ? (
+            <p className="text-center text-gray-500">Loading products...</p>
+          ) : filteredProducts.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredProducts.map((product) => (
                 <ProductCard key={product.id} {...product} />
