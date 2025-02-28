@@ -27,7 +27,10 @@ const CartSidebar = () => {
                   <span>${(item.price * item.quantity).toFixed(2)}</span>
                 </div>
                 <div className="flex items-center justify-between mt-2">
-                  <button onClick={() => handleRemoveFromCart(item.id)} className="text-red-600 underline">
+                  <button
+                    onClick={() => handleRemoveFromCart(item.id)}
+                    className="text-red-600 underline"
+                  >
                     Remove
                   </button>
                   <div className="flex items-center">
@@ -38,7 +41,10 @@ const CartSidebar = () => {
                       -
                     </button>
                     <span className="mx-2">{item.quantity}</span>
-                    <button onClick={() => handleQuantityChange(item.id, item.quantity + 1)} className="px-2">
+                    <button
+                      onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
+                      className="px-2"
+                    >
                       +
                     </button>
                   </div>

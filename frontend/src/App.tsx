@@ -4,10 +4,11 @@ import { CSSTransition, TransitionGroup } from "react-transition-group";
 import ProductCatalog from "./pages/ProductCatalog";
 import ProductDetails from "./pages/ProductDetails";
 import CartDetails from "./pages/CartDetails";
+import CheckoutForm from "./components/CheckoutForm";
+import Return from "./components/Return";
 
 const App: React.FC = () => {
-  const location = useLocation(); // Get current location
-
+  const location = useLocation();
   return (
     <TransitionGroup>
       <CSSTransition key={location.key} classNames="page" timeout={300}>
@@ -15,6 +16,8 @@ const App: React.FC = () => {
           <Route path="/" element={<ProductCatalog />} />
           <Route path="/product/:id" element={<ProductDetails />} />
           <Route path="/cart" element={<CartDetails />} />
+          <Route path="/user/checkout" element={<CheckoutForm />} />
+          <Route path="/user/return" element={<Return />} />
         </Routes>
       </CSSTransition>
     </TransitionGroup>
