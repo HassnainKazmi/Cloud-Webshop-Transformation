@@ -149,7 +149,7 @@ class OrderOperations(Resource):
             subject="Order Confirmation",
             recipients=[user.email],
             template_name="order_confirm.html",
-            name={user.first_name},
+            name=user.first_name,
             date=datetime.today().strftime("%m/%d/%Y"),
             receipt_details=[
                 {"description": product.name, "amount": product.price}
