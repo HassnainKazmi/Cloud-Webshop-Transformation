@@ -7,7 +7,7 @@ from models.models import Order as OrderModel, User, Product, OrderItem, Invento
 
 from utils.fields import order_fields
 from utils.order_request_arguments import post_order_arguments, patch_order_arguments
-from utils.utils import calculate_stock_level, send_mail_gmail, send_mail
+from utils.utils import calculate_stock_level, send_mail_gmail
 from utils.enums import OrderStatus
 
 
@@ -145,17 +145,6 @@ class OrderOperations(Resource):
             )
         database.db.session.bulk_update_mappings(Inventory, updated_inventory_data)
         database.db.session.commit()
-        # send_mail(
-        #     template_id=39200651,
-        #     recipient=user.email,
-        #     name=user.first_name,
-        #     date=datetime.today().strftime("%m/%d/%Y"),
-        #     receipt_details=[
-        #         {"description": product.name, "amount": product.price}
-        #         for product in products
-        #     ],
-        #     total=total_price,
-        # )
         send_mail_gmail(
             subject="Order Confirmation",
             recipients=[user.email],
