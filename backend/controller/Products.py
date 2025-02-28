@@ -28,6 +28,7 @@ class Products(Resource):
         category = Category().query.filter_by(id=args["category_id"]).first()
         new_product = Product(
             name=args["name"],
+            description=args["description"],
             price=args["price"],
             category=category,
         )
