@@ -68,8 +68,8 @@ def root():
 @app.route("/create-checkout-session", methods=["POST"])
 def create_checkout_session():
     try:
-        args = post_stripe_arguments.parse_args()
-        line_items = args.get("line_items")
+        # args = post_stripe_arguments.parse_args()
+        # line_items = args.get("line_items")
         session = stripe.checkout.Session.create(
             line_items=[
                 {
