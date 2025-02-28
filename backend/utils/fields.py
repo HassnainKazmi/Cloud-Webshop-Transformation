@@ -5,6 +5,7 @@ category_fields = {"id": fields.Integer, "name": fields.String}
 product_fields = {
     "id": fields.Integer,
     "name": fields.String,
+    "description": fields.String,
     "quantity": fields.Integer,
     "price": fields.Float,
     "category": fields.Nested(nested=category_fields),
