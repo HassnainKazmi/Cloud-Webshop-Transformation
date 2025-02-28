@@ -21,8 +21,8 @@ const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
   return (
     <div>
       <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
-        <span>${priceRange[0].toFixed(2)}</span>
-        <span>${priceRange[1].toFixed(2)}</span>
+        <span>€{priceRange[0].toFixed(2)}</span>
+        <span>€{priceRange[1].toFixed(2)}</span>
       </div>
       <Range
         step={1}
