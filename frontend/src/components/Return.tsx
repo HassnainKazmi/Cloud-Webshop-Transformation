@@ -65,8 +65,7 @@ const Return = () => {
           </div>
           <p className="text-lg font-semibold text-gray-700">
             <span className="text-green-600 font-bold">Payment successful!</span> Thank you for your
-            purchase. A confirmation email has been sent to{" "}
-            <span className="text-blue-600 font-bold">{checkoutData.customerEmail}</span>.
+            purchase.
           </p>
           <button
             onClick={handleClick}
