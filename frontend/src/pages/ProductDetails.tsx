@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { useCart } from "../context/CartContext";
@@ -16,6 +17,7 @@ const ProductDetails: React.FC = () => {
   const [isImageLoading, setIsImageLoading] = useState(true);
   const [hasImageError, setHasImageError] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
+  const navigate = useNavigate();
 
   const placeholderImage = "https://via.placeholder.com/500?text=No+Image+Available";
 
@@ -40,8 +42,7 @@ const ProductDetails: React.FC = () => {
     }
   }, [id]);
 
-  // Handle Add to Cart
-  const handleAddToCart = () => {
+  const handleAddToCart = (navigateToCheckout = false) => {
     if (product) {
       dispatch({
         type: "ADD_TO_CART",
@@ -53,8 +54,6 @@ const ProductDetails: React.FC = () => {
           image: product.image,
         },
       });
-
-      // Show toast notification
       toast.success(`${product.name} added to cart! 🛒`, {
         position: "top-right",
         autoClose: 1500,
@@ -65,9 +64,12 @@ const ProductDetails: React.FC = () => {
         theme: "light",
       });
 
-      // Change button state for visual feedback
       setIsAdded(true);
       setTimeout(() => setIsAdded(false), 1200);
+
+      if (navigateToCheckout) {
+        navigate("/cart");
+      }
     }
   };
 
@@ -98,8 +100,6 @@ const ProductDetails: React.FC = () => {
   return (
     <div className="container mx-auto my-10 px-4 py-6">
       <Navbar />
-
-      {/* Back Button */}
       <div className="mb-4 mt-10">
         <button
           onClick={() => window.history.back()}
@@ -108,18 +108,17 @@ const ProductDetails: React.FC = () => {
           ← Back to Catalog
         </button>
       </div>
-
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out">
-        {/* Product Image */}
         <div className="relative flex justify-center items-center">
           {isImageLoading && (
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="w-8 h-8 rounded-full border-4 border-gray-300 border-t-blue-600 animate-spin"></div>
             </div>
           )}
-
           <img
-            src={hasImageError ? placeholderImage : product.image}
+            src={
+              hasImageError ? placeholderImage : `${import.meta.env.VITE_IMAGE_BASE_URL}${id}.jpg`
+            }
             alt={product.name}
             className={`max-w-full max-h-[500px] object-contain rounded-lg shadow-lg border border-gray-200 transition-transform duration-300 ease-in-out hover:scale-105 ${
               isImageLoading ? "hidden" : ""
@@ -131,8 +130,6 @@ const ProductDetails: React.FC = () => {
             }}
           />
         </div>
-
-        {/* Product Details */}
         <div className="flex flex-col justify-between">
           <div>
             <h1 className="text-4xl font-bold mb-4 text-gray-900">{product.name}</h1>
@@ -141,23 +138,20 @@ const ProductDetails: React.FC = () => {
           </div>
 
           <div className="mt-6 flex flex-wrap gap-4">
-            {/* Add to Cart Button with Visual Feedback */}
             <motion.button
               className="flex-1 px-6 py-3 text-white text-lg font-medium rounded-lg shadow-md transition-all duration-300 ease-in-out transform hover:scale-105"
               style={{
                 backgroundColor: isAdded ? "#10B981" : "#16A34A",
                 boxShadow: isAdded ? "0px 4px 15px rgba(16, 185, 129, 0.4)" : "none",
               }}
-              onClick={handleAddToCart}
+              onClick={() => handleAddToCart(false)}
               whileTap={{ scale: 0.9 }}
             >
               {isAdded ? "✔ Added" : "Add to Cart"}
             </motion.button>
-
-            {/* Buy Now Button */}
             <button
               className="flex-1 px-6 py-3 bg-orange-500 text-white text-lg font-medium rounded-lg shadow-md hover:bg-orange-600 hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105"
-              onClick={() => alert("Buy Now functionality to be implemented")}
+              onClick={() => handleAddToCart(true)}
             >
               Buy Now
             </button>

@@ -27,8 +27,6 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
   return (
     <div className="w-full p-4 bg-gray-100 rounded-lg shadow">
       <h2 className="text-lg font-bold mb-4">Filters</h2>
-
-      {/* Search */}
       <div className="mb-6">
         <input
           type="text"
@@ -38,8 +36,6 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
           className="w-full px-4 py-2 border rounded-lg shadow"
         />
       </div>
-
-      {/* Category Filter */}
       <div className="mb-6">
         <h3 className="text-md font-semibold mb-2">Categories</h3>
         <div className="space-y-3">
@@ -57,8 +53,6 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
           ))}
         </div>
       </div>
-
-      {/* Price Range Slider */}
       <div>
         <h3 className="text-md font-semibold mb-2">Price Range</h3>
         <PriceRangeSlider

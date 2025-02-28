@@ -57,10 +57,8 @@ const ProductCatalog: React.FC = () => {
 
   return (
     <div className="container mx-auto my-10 px-4 py-6">
-      {/* Navbar with Cart Icon */}
       <Navbar />
 
-      {/* Header Section */}
       <h1 className="text-2xl font-bold text-center my-6">Product Catalog</h1>
 
       {!isFilterOpen && (
@@ -72,9 +70,7 @@ const ProductCatalog: React.FC = () => {
         </button>
       )}
 
-      {/* Main Layout */}
       <div className="flex flex-col md:flex-row gap-8">
-        {/* Filter Sidebar */}
         <div
           className={`transition-all duration-300 ease-in-out ${
             isFilterOpen ? "block" : "hidden md:block"
@@ -92,8 +88,6 @@ const ProductCatalog: React.FC = () => {
             setSearchQuery={setSearchQuery}
           />
         </div>
-
-        {/* Product Grid */}
         <div className="w-full md:w-3/4">
           {filteredProducts.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

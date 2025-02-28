@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
 
@@ -21,6 +20,29 @@ const CartDetails: React.FC = () => {
   const totalItems = state.items.reduce((total, item) => total + item.quantity, 0);
   const totalPrice = state.items.reduce((total, item) => total + item.price * item.quantity, 0);
 
+  const handleCheckOut = async () => {
+    const products = state.items.map((p) => ({
+      product_id: p.id,
+      quantity: p.quantity,
+    }));
+
+    const response = await fetch(
+      "https://cloud-webshop-backend-gxhqcxhmguc7brg0.germanywestcentral-01.azurewebsites.net/api/order/",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          products,
+        }),
+      }
+    );
+    if (response.status === 201) {
+      navigate("/user/checkout");
+    }
+  };
+
   return (
     <div className="container mx-auto my-10 px-4 py-6">
       <h1 className="text-3xl font-extrabold text-center mb-8 text-gray-800">Shopping Cart</h1>
@@ -30,10 +52,9 @@ const CartDetails: React.FC = () => {
           <ul className="divide-y divide-gray-200">
             {state.items.map((item) => (
               <li key={item.id} className="py-4 flex items-center justify-between">
-                {/* Product Image and Details */}
                 <div className="flex items-center gap-4">
                   <img
-                    src={item.image || "https://via.placeholder.com/80"}
+                    src={`${import.meta.env.VITE_IMAGE_BASE_URL}${item.id}.jpg`}
                     alt={item.name}
                     className="w-20 h-20 rounded-lg shadow-md border"
                   />
@@ -47,7 +68,6 @@ const CartDetails: React.FC = () => {
                     </button>
                   </div>
                 </div>
-                {/* Product Quantity and Price */}
                 <div className="flex items-center gap-4">
                   <div className="flex items-center">
                     <button
@@ -69,14 +89,10 @@ const CartDetails: React.FC = () => {
               </li>
             ))}
           </ul>
-
-          {/* Cart Totals */}
           <div className="mt-8 text-right">
             <p className="text-lg font-bold text-gray-800">Total Items: {totalItems}</p>
             <p className="text-xl font-bold text-blue-600">Total Price: ${totalPrice.toFixed(2)}</p>
           </div>
-
-          {/* Action Buttons */}
           <div className="mt-6 flex justify-between">
             <button
               onClick={() => navigate("/")}
@@ -86,7 +102,7 @@ const CartDetails: React.FC = () => {
             </button>
             <button
               className="px-6 py-3 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition"
-              onClick={() => navigate("/user/checkout")}
+              onClick={() => handleCheckOut()}
             >
               Checkout
             </button>
