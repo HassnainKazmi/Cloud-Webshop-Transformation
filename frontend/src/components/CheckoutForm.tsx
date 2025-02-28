@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { EmbeddedCheckoutProvider, EmbeddedCheckout } from "@stripe/react-stripe-js";
 import { useCart } from "../context/CartContext";
@@ -7,42 +7,56 @@ const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PK);
 
 const CheckoutForm = () => {
   const { state } = useCart();
+  const [clientSecret, setClientSecret] = useState(null);
+
   const fetchClientSecret = useCallback(async () => {
-    const line_items = state.items.map((item) => ({
+    if (state.items.length === 0) return;
+
+    const cartProducts = state.items.map((item) => ({
       price_data: {
         currency: "eur",
         product_data: {
           name: item.name,
         },
-        unit_amount: item.price,
+        unit_amount: Math.round(item.price * 100),
       },
       quantity: item.quantity,
     }));
 
-    console.log(line_items);
+    try {
+      const res = await fetch(
+        "https://cloud-webshop-backend-gxhqcxhmguc7brg0.germanywestcentral-01.azurewebsites.net/create-checkout-session",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ line_items: cartProducts }),
+        }
+      );
 
-    const res = await fetch(
-      "https://cloud-webshop-backend-gxhqcxhmguc7brg0.germanywestcentral-01.azurewebsites.net/create-checkout-session",
-      {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify({ line_items }),
-      }
-    );
-    const getClientSecret = await res.json();
-    console.log({ getClientSecret });
-    return getClientSecret.clientSecret;
-  }, []);
+      if (!res.ok) throw new Error("Failed to fetch client secret");
 
-  const options = { fetchClientSecret };
+      const data = await res.json();
+      setClientSecret(data.clientSecret);
+    } catch (error) {
+      console.error("Error fetching client secret:", error);
+    }
+  }, [state.items]);
+
+  useEffect(() => {
+    fetchClientSecret();
+  }, [fetchClientSecret]);
 
   return (
     <div id="checkout">
-      <EmbeddedCheckoutProvider stripe={stripePromise} options={options}>
-        <EmbeddedCheckout />
-      </EmbeddedCheckoutProvider>
+      {clientSecret ? (
+        <EmbeddedCheckoutProvider stripe={stripePromise} options={{ clientSecret }}>
+          <EmbeddedCheckout />
+        </EmbeddedCheckoutProvider>
+      ) : (
+        <p>Loading checkout...</p>
+      )}
     </div>
   );
 };
