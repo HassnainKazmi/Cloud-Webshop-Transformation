@@ -26,6 +26,9 @@ const Return = () => {
         const checkoutStatus = await res.json();
         console.log({ checkoutStatus });
 
+        if (checkoutStatus.status === "complete") {
+          console.log("Checkout status complete");
+        }
         setCheckoutData({
           status: checkoutStatus.status,
           customerEmail: checkoutStatus.customer_email || "",
@@ -48,13 +51,20 @@ const Return = () => {
 
   if (checkoutData.status === "complete") {
     return (
-      <section id="success">
-        <p>
-          We appreciate your business! A confirmation email will be sent to{" "}
-          {checkoutData.customerEmail}.
-        </p>
-        <button onClick={handleClick}>Back to Home!</button>
-      </section>
+      <div className="flex justify-center items-center min-h-screen">
+        <section className="bg-white p-6 rounded-lg shadow-lg text-center max-w-md w-full">
+          <p className="text-lg font-semibold text-gray-700">
+            We appreciate your business! A confirmation email will be sent to{" "}
+            <span className="text-blue-600 font-bold">{checkoutData.customerEmail}</span>.
+          </p>
+          <button
+            onClick={handleClick}
+            className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+          >
+            Back to Home!
+          </button>
+        </section>
+      </div>
     );
   }
 

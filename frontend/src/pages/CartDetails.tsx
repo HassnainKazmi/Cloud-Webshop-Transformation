@@ -1,9 +1,11 @@
 import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const CartDetails: React.FC = () => {
   const { state, dispatch } = useCart();
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleRemoveFromCart = (id: number) => {
     dispatch({ type: "REMOVE_FROM_CART", payload: { id } });
@@ -21,6 +23,7 @@ const CartDetails: React.FC = () => {
   const totalPrice = state.items.reduce((total, item) => total + item.price * item.quantity, 0);
 
   const handleCheckOut = async () => {
+    setIsLoading(true);
     const products = state.items.map((p) => ({
       product_id: p.id,
       quantity: p.quantity,
@@ -38,6 +41,7 @@ const CartDetails: React.FC = () => {
         }),
       }
     );
+    setIsLoading(false);
     if (response.status === 201) {
       navigate("/user/checkout");
     }
@@ -106,10 +110,15 @@ const CartDetails: React.FC = () => {
               Continue Shopping
             </button>
             <button
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition w-full sm:w-auto cursor-pointer"
+              className="px-6 py-3 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition w-full sm:w-auto cursor-pointer flex items-center justify-center"
               onClick={() => handleCheckOut()}
+              disabled={isLoading}
             >
-              Checkout
+              {isLoading ? (
+                <div className="w-5 h-5 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+              ) : (
+                "Checkout"
+              )}
             </button>
           </div>
         </div>
