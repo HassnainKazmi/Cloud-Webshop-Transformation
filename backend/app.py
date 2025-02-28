@@ -1,12 +1,16 @@
 import os
-from flask import Flask, jsonify, abort
+import logging
+import sys
+
+from flask import Flask, jsonify, abort, request
 from flask_restful import Api
 from flask_cors import CORS
 import stripe
-from flask_mail import Mail
+from utils.stripe_request_arguments import post_stripe_arguments
 from dotenv import load_dotenv
 
-from utils.stripe_request_arguments import post_stripe_arguments
+logging.basicConfig(level=logging.DEBUG, stream=sys.stdout, force=True)
+logger = logging.getLogger()
 
 app_env = os.getenv("APP_ENV", "development")
 
@@ -27,14 +31,7 @@ api = Api(app)
 
 CORS(app)
 
-app.config["MAIL_SERVER"] = os.getenv("MAIL_SERVER")
-app.config["MAIL_PORT"] = os.getenv("MAIL_PORT")
-app.config["MAIL_USERNAME"] = os.getenv("MAIL_USERNAME")
-app.config["MAIL_PASSWORD"] = os.getenv("MAIL_PASSWORD")
-app.config["MAIL_USE_TLS"] = False
-app.config["MAIL_USE_SSL"] = True
-
-mail = Mail(app)
+app.logger.setLevel(logging.DEBUG)
 
 import controller.Products  # noqa: E402
 import controller.Category  # noqa: E402
@@ -70,20 +67,9 @@ def create_checkout_session():
         args = post_stripe_arguments.parse_args()
         line_items = args.get("line_items")
         session = stripe.checkout.Session.create(
-            # line_items=[
-            #     {
-            #         "price_data": {
-            #             "currency": "eur",
-            #             "product_data": {
-            #                 "name": "T-shirt",
-            #             },
-            #             "unit_amount": 2000,
-            #         },
-            #         "quantity": 1,
-            #     }
-            # ],
-            line_items=line_items,
+            payment_method_types=["card"],
             mode="payment",
+            line_items=line_items,
             ui_mode="embedded",
             return_url=os.getenv("PAYMENT_RESULT_URL")
             + "?session_id={CHECKOUT_SESSION_ID}",
